@@ -1,5 +1,5 @@
 <script>
-	import { adjectify, plusminus, countryify, ordinal_suffix_of } from './robo_utils.js';
+	import { adjectify, plusminus, countryify, ordinal_suffix_of, getHeadline } from './robo_utils.js';
 	import Select from './Select.svelte';
 	import { data, metadata } from './stores.js';
 	import { regiondata } from './regions.js';
@@ -712,59 +712,6 @@ function regionify(code, pNum) {
 	}	
 }
 	
-	function getHeadline(place) {
-		let content = [
-			{
-				'rank': place.data.population.rank.change.all,
-				'headline': 'Big population rise in ' + place.name,
-				'subhead': place.name + ' has seen one of the largest population rises in England and Wales according to Census data.'
-			},
-			{
-				'rank': total - place.data.population.rank.change.all,
-				'headline': place.name + '\'s population is shrinking',
-				'subhead': place.name + ' is one of the few places in England and Wales where the population is getting smaller according to Census data.'
-			},
-			{
-				'rank': place.data.tenure.rankp.change.owned,
-				'headline': 'Home ownership rise in ' + place.name,
-				'subhead': place.name + ' is among the few areas in England and Wales to that has seen a rise in home ownership according to Census data.'
-			},
-			{
-				'rank': total - place.data.tenure.rankp.change.owned,
-				'headline': 'Big home ownership decline in ' + place.name,
-				'subhead': place.name + ' has seen one of the largest declines in home ownership in England and Wales according to Census data.'
-			},
-			{
-				'rank': place.data.medage.rank.change.median,
-				'headline': place.name + ' is getting older',
-				'subhead': place.name + ' has seen one of the largest rises in avarage age in England and Wales according to Census data.'
-			},
-			{
-				'rank': total - place.data.medage.rank.change.median,
-				'headline': place.name + ' is getting younger',
-				'subhead': place.name + ' is among the few areas in England and Wales where the average age is declining according to Census data.'
-			},
-			{
-				'rank': total - place.data.ethnicity.rankp.change.white,
-				'headline': 'Ethnic diversity rises in ' + place.name,
-				'subhead': place.name + ' saw one of the largest BAME population rises in England and Wales according to Census data.'
-			}
-		]
-		let ranks = content.map(item => item.rank);
-		let min = Math.min(...ranks);
-		if (min < breaks[0]) {
-		  let index = ranks.indexOf(min);
-			return {
-				'headline': content[index].headline,
-				'subhead': content[index].subhead
-			};
-		} else {
-			return {
-				'headline': 'Latest Census data for ' + place.name,
-				'subhead': 'The Office for National Statistics has released Census data for ' + place.name + '.'
-			};
-		}
-	}
 </script>
 
 <style>
@@ -774,9 +721,9 @@ function regionify(code, pNum) {
 
 {#if selected != null}
 <h1 style="color:red">This is a prototype using old data, and might not be accurate</h1>
-<h2>{getHeadline(place).headline}</h2>
+<h2>{getHeadline(place, total, breaks).headline}</h2>
 <p>
-	<strong>{getHeadline(place).subhead}</strong>
+	<strong>{getHeadline(place, total, breaks).subhead}</strong>
 </p>
 <p>
 	{paragraphify(place.code, 0)}
