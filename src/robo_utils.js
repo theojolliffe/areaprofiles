@@ -1,9 +1,6 @@
-import { adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
+import { formatUnicorn, adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 
 function countryify(code, pNum, place, _data, countryRank, label) {
-    // FINDS RANK OF VARIABLE INPUT 
-    let ranks = countryRank; 
-    ranks.length = 0;
     function compVariable(a, b, c, d) {
         let vari = place['data'][a][b][c][d];
         let array = [], key;
@@ -25,161 +22,165 @@ function countryify(code, pNum, place, _data, countryRank, label) {
     let roboFunctions = {
         "population_val_c2011_all": function() {
             // TOTAL POPULATION
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " smallest " : " largest ") + "population in the UK, with " + ranks[pNum].abVal.toLocaleString() + " inhabitants."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " smallest " : " largest ") + "population in the UK, with " + rank.abVal.toLocaleString() + " inhabitants."
         }, 
         "population_val_change_all": function() {
             // POPULATION CHANGE
-            return "Since 2010, " + place["name"] + " has seen the " + ordinal_suffix_of(ranks[pNum].sqrt) + " largest population " + ((ranks[pNum].value < 0) ? "decrease" : "increase") + " in the UK, with a change of " + ranks[pNum].abVal + "%."
+            return "Since 2010, " + place_name + " has seen the " + ordinal_suffix_of(rank.sqrt) + " largest population " + ((rank.value < 0) ? "decrease" : "increase") + " in the UK, with a change of " + rank.abVal + "%."
         }, 
         "age_perc_c2011_a65plus": function() {
             // PROPORTION OVER 65
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + " highest proportion of residents " + "(" + ranks[pNum].abVal + "%)" + ((ranks[pNum].value < 0) ? " under " : " over ") + "the age of 65 in the UK."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + " highest proportion of residents " + "(" + rank.abVal + "%)" + ((rank.value < 0) ? " under " : " over ") + "the age of 65 in the UK."
         }, 
         "age_perc_change_a65plus": function() {
             // PROPORTION OVER 65 CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") +  "in the proportion of residents over the age of 65 (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") +  "in the proportion of residents over the age of 65 (" + rank.abVal + "%)."
         }, 
         "age_perc_c2011_a015": function() {
             // PROPORTION UNDER 16
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of residents " + "(" + ranks[pNum].abVal + "%)" + " under the age of 16 in the UK."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of residents " + "(" + rank.abVal + "%)" + " under the age of 16 in the UK."
         }, 
         "age_perc_change_a015": function() {
             // PROPORTION UNDER 16 CHANGE
-            return place["name"] + " has seen the " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest increase in the proportion of residents " + "(" + ranks[pNum].abVal + "%)" + ((ranks[pNum].value < 0) ? " under " : " over ") + "the age of 16 in the UK."
+            return place_name + " has seen the " + ordinal_suffix_of(rank.sqrt) + " greatest increase in the proportion of residents " + "(" + rank.abVal + "%)" + ((rank.value < 0) ? " under " : " over ") + "the age of 16 in the UK."
         }, 
         "medage_val_c2011_median": function() {
           // MEDIAN AGE
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "median age " + "(" + ranks[pNum].abVal + ")" + " in the UK."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "median age " + "(" + rank.abVal + ")" + " in the UK."
         }, 
         "medage_val_change_median": function() {
             // MEDIAN AGE CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in residents' median age " + "(" + ranks[pNum].abVal + ")."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in residents' median age " + "(" + rank.abVal + ")."
         }, 
         "density_val_c2011_density": function() {
             // POPULATION DENSITY
-            return place["name"] + " is the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " least " : " most ") + "densely populated part of the UK, with " + ranks[pNum].abVal + " inhabitants per hectare."
+            return place_name + " is the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " least " : " most ") + "densely populated part of the UK, with " + rank.abVal + " inhabitants per hectare."
         },
         "economic_perc_c2011_unemployed": function() {
             // UNEMPLOYMENT
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of unemployment in the UK, with " + ranks[pNum].abVal + "% out of work."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "rate of unemployment in the UK, with " + rank.abVal + "% out of work."
         },
         "economic_perc_change_unemployed": function() {
             // UNEMPLOYMENT CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in rate of unemployment (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in rate of unemployment (" + rank.abVal + "%)."
         },
         "economic_perc_c2011_student": function() {
             // STUDENTS
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of students in the UK, with " + ranks[pNum].abVal + "% currently studying."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of students in the UK, with " + rank.abVal + "% currently studying."
         },
         "economic_perc_change_student": function() {
             // STUDENTS CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in the propotion of students (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in the propotion of students (" + rank.abVal + "%)."
         },
         "economic_perc_c2011_carer": function() {
             // CARER
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of carers in the UK, at " + ranks[pNum].abVal + "%."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of carers in the UK, at " + rank.abVal + "%."
         },
         "economic_perc_change_carer": function() {
             // CARER CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in the proportion of carers (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in the proportion of carers (" + rank.abVal + "%)."
         },
         "economic_perc_c2011_retired": function() {
             // RETIRED
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of retirees in the UK (" + ranks[pNum].abVal + "%)."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of retirees in the UK (" + rank.abVal + "%)."
         },
         "economic_perc_change_retired": function() {
             // RETIRED CHANGE 
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in the proportion of retirees (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in the proportion of retirees (" + rank.abVal + "%)."
         },
         "economic_perc_c2011_inactive": function() {
             // INACTIVE
-            return place["name"] + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of economic inactivity in the UK (" + ranks[pNum].abVal + "%)."
+            return place_name + " has the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "rate of economic inactivity in the UK (" + rank.abVal + "%)."
         },
         "economic_perc_change_inactive": function() {
             // INACTIVE CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in rate of economic inactivity (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in rate of economic inactivity (" + rank.abVal + "%)."
         },
         "ethnicity_perc_c2011_white": function() {
             // ETHNICITY WHITE
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of white residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of white residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_change_white": function() {
             // ETHNICITY WHITE CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of white residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of white residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_c2011_black": function() {
             // ETHNICITY BLACK
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of black residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of black residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_change_black": function() {
             // ETHNICITY BLACK CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of black residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of black residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_c2011_asian": function() {
             // ETHNICITY ASIAN
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of asian residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of asian residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_change_asian": function() {
             // ETHNICITY ASIAN CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of asian residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of asian residents (" + rank.abVal + "%)."
         },
         "ethnicity_perc_c2011_mixed": function() {
             // ETHNICITY MIXED
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of residents with mixed ethnicity (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of residents with mixed ethnicity (" + rank.abVal + "%)."
         },
         "ethnicity_perc_change_mixed": function() {
             // ETHNICITY MIXED CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of residents with mixed ethnicity (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of residents with mixed ethnicity (" + rank.abVal + "%)."
         },
         "socialgrade_perc_c2011_ab": function() {
             // SOCIAL UPPER MIDDLE
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of upper middle class residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of upper middle class residents (" + rank.abVal + "%)."
         },
         "socialgrade_perc_change_ab": function() {
             // SOCIAL UPPER MIDDLE CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of upper middle class residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of upper middle class residents (" + rank.abVal + "%)."
         },
         "socialgrade_perc_c2011_c1": function() {
             // SOCIAL LOWER MIDDLE
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of lower middle class residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of lower middle class residents (" + rank.abVal + "%)."
         },
         "socialgrade_perc_change_c1": function() {
             // SOCIAL LOWER MIDDLE CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of lower middle class residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of lower middle class residents (" + rank.abVal + "%)."
         },
         "socialgrade_perc_c2011_c2": function() {
             // SOCIAL SKILLED WORKER
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of skilled working class residents (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of skilled working class residents (" + rank.abVal + "%)."
         },
         "socialgrade_perc_change_c2": function() {
             // SOCIAL SKILLED WORKER CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of skilled working class residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of skilled working class residents (" + rank.abVal + "%)."
         },
-        "socialgrade_perc_c2011_de": function() {
+        "socialgrade_perc_c2011_de": 
             // SOCIAL WORKING
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of working class or non-working residents (" + ranks[pNum].abVal + "%)."
-        },
+            "{place_name} is the UK area with the {ordinalSuffix} {valueIsNegative?lowest:highest} proportion of working class or non-working residents ({abVal}%)."
+        ,
         "socialgrade_perc_change_de": function() {
             // SOCIAL WORKING CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of working class or non-working residents (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of working class or non-working residents (" + rank.abVal + "%)."
         },
         "tenure_perc_c2011_owned": function() {
             // TENURE OWNERSHIP
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of home ownership (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "rate of home ownership (" + rank.abVal + "%)."
         },
         "tenure_perc_change_owned": function() {
             // TENURE OWNERSHIP CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in rate of home ownership (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in rate of home ownership (" + rank.abVal + "%)."
         },
         "tenure_perc_c2011_rentsocial": function() {
             // TENURE SOCIAL RENT
-            return place["name"] + " is the UK area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of social housing (" + ranks[pNum].abVal + "%)."
+            return place_name + " is the UK area with the " + ordinal_suffix_of(rank.sqrt) + ((rank.value < 0) ? " lowest " : " highest ") + "proportion of social housing (" + rank.abVal + "%)."
         },
         "tenure_perc_change_rentsocial": function() {
             // TENURE SOCIAL RENT CHANGE
-            return "In the last ten years, " + place["name"] + " has seen the UK's " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest " + ((ranks[pNum].value < 0) ? " decrease " : " increase ") + "in proportion of social housing (" + ranks[pNum].abVal + "%)."
+            return "In the last ten years, " + place_name + " has seen the UK's " + ordinal_suffix_of(rank.sqrt) + " greatest " + ((rank.value < 0) ? " decrease " : " increase ") + "in proportion of social housing (" + rank.abVal + "%)."
         }
     };
+
+    let ranks = countryRank; 
+    ranks.length = 0;
+
     for (let key in roboFunctions) {
         if (roboFunctions.hasOwnProperty(key)) {
             compVariable(...key.split("_"));
@@ -190,9 +191,23 @@ function countryify(code, pNum, place, _data, countryRank, label) {
             return a.sqr - b.sqr;
     }); 
 
-    label[0] = ranks[pNum].label
+    let rank = ranks[pNum];
+    label[0] = rank.label
+
+    let place_name = place["name"];
     
-    roboFunctions[ranks[pNum].label]();
+    let roboFn = roboFunctions[rank.label];
+    if (typeof roboFn === "string") {
+        return formatUnicorn(roboFn, {
+            place_name,
+            ordinalSuffix: ordinal_suffix_of(rank.sqrt),
+            value: rank.value,
+            valueIsNegative: rank.value < 0,
+            abVal: rank.abVal
+        });
+    } else {
+        return roboFn();
+    }
 } 
 
 function countryify2(code, param, pNum, countryRank) {
