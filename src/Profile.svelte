@@ -1,5 +1,5 @@
 <script>
-	import { countryify, countryify2, regionify, getHeadline, thirdSen, paragraphify } from './robo_utils.js';
+	import { getHeadline, paragraphify } from './robo_utils.js';
 	import { adjectify, plusminus, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 	import Select from './Select.svelte';
 	import { data, metadata } from './stores.js';
@@ -32,18 +32,9 @@
 <p>
 	<strong>{getHeadline(place, total, breaks).subhead}</strong>
 </p>
-<p>
-	{paragraphify(place.code, 0, $data, $regiondata, place, countryRank, label, breaks)}
-</p>
-<p>
-	{paragraphify(place.code, 1, $data, $regiondata, place, countryRank, label, breaks)}
-</p>
-<p>
-	{paragraphify(place.code, 2, $data, $regiondata, place, countryRank, label, breaks)}
-</p>
-<p>
-	{paragraphify(place.code, 3, $data, $regiondata, place, countryRank, label, breaks)}
-</p>
+{#each paragraphify(place, 4, $data, $regiondata, countryRank, label, breaks) as paragraph}
+<p>{paragraph}</p>
+{/each}
 {:else}
 <p>
 	This demo illustrates different ways of presenting local authority level data from the 2011 Census and how it changed from 2001, making use of robo-journalism and automation techniques.
