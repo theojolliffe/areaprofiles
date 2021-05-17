@@ -243,4 +243,86 @@ const regionifyRoboStrings = {
     "tenure_perc_change_rentsocial": "In the last ten years, {oddNumberedPara?this area:{ladName}} has seen {londonOrWales?:the }{regionName}'s {ordinalSuffix} {incDec} in proportion of social housing ({abValPctChange})."
 };
 
-export { countryifyRoboStrings, countryify2RoboStrings, regionifyRoboStrings };
+const thirdSenRoboStrings = {
+    // TOTAL POPULATION
+    "population_val_c2011_all": " The current population of {placeName} is {val}; {moreLess} the national average.",
+    // POPULATION CHANGE
+    "population_val_change_all": " Since the 2001 Census, the population of {placeName} has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities.",
+    // PROPORTION OVER 65
+    "age_perc_c2011_a65plus": " Currently, {val}% of residents here are over the age of 65; {moreLess} the national average.",
+    // POPULATION DENSITY
+    "density_val_c2011_density": " The current population density here is {val} people per hectare; {moreLess} the national average.",
+    "density_val_change_density": "",
+    // PROPORTION OVER 65 CHANGE
+    "age_perc_change_a65plus": " In the last ten years, the proportion of over 65s here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities.",
+    // PROPORTION UNDER 16
+    "age_perc_c2011_a015": " Currently, {val}% of residents here are under the age of 16; {moreLess} the average across the UK.",
+    // PROPORTION UNDER 16 CHANGE
+    "age_perc_change_a015": " In the last ten years, the proportion of under 16s here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // MEDIAN AGE
+    "medage_val_c2011_median": " The current median age of residents here is {val} years old; {moreLess} the national average.",
+    // MEDIAN AGE CHANGE
+    "medage_val_change_median": " Since the last Census, the median age here has {valIsNegative?decreased:increased} by {absVal} years; {moreLess} the average across all local authorities.",
+    // UNEMPLOYMENT
+    "economic_perc_c2011_unemployed": " The current rate of unemployment here is {val}%; {moreLess} the national average.",
+    // UNEMPLOYMENT CHANGE
+    "economic_perc_change_unemployed": " Since the last Census, the rate of unemployment here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the national average.",
+    // STUDENTS
+    "economic_perc_c2011_student": " Currently, {val}% of residents here are students; {moreLess} the average across the UK.",
+    // STUDENTS CHANGE
+    "economic_perc_change_student": " In the last ten years, the proportion of students here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // CARER
+    "economic_perc_c2011_carer": " Currently, {val}% of residents here are carers; {moreLess} the national average.",
+    // CARER CHANGE
+    "economic_perc_change_carer": " In the last ten years, the proportion of carers here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // RETIRED
+    "economic_perc_c2011_retired": " Currently, {val}% of residents here are retired; {moreLess} the national average.",
+    // RETIRED CHANGE
+    "economic_perc_change_retired": " In the last ten years, the proportion of retirees here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // INACTIVE
+    "economic_perc_c2011_inactive": " The current rate of economic inactivity here is {val}%; {moreLess} the average across the UK.",
+    // INACTIVE CHANGE
+    "economic_perc_change_inactive": " In the last ten years, the rate of economic inactivity here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // ETHNICITY WHITE
+    "ethnicity_perc_c2011_white": " Currently, {val}% of residents here are white; {moreLess} the national average.",
+    // ETHNICITY WHITE CHANGE
+    "ethnicity_perc_change_white": " Since the last Census, the proportion of white residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the UK average.",
+    // ETHNICITY BLACK
+    "ethnicity_perc_c2011_black": " Currently, {val}% of residents here are black; {moreLess} the average across the UK.",
+    // ETHNICITY BLACK CHANGE
+    "ethnicity_perc_change_black": " In the last ten years, the proportion of black residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK.",
+    // ETHNICITY ASIAN
+    "ethnicity_perc_c2011_asian": " Currently, {val}% of residents here are Asian; {moreLess} the national average.",
+    // ETHNICITY ASIAN CHANGE
+    "ethnicity_perc_change_asian": " Since the 2001 Census, the proportion of Asian residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities.",
+    // ETHNICITY MIXED
+    "ethnicity_perc_c2011_mixed": " Currently, {val}% of residents here are of mixed ethnicity; {moreLess} the national average.",
+    // ETHNICITY MIXED CHANGE
+    "ethnicity_perc_change_mixed": " In the last ten years, the proportion of residents of mixed ethnicity here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the national average.",
+    // SOCIAL UPPER MIDDLE
+    "socialgrade_perc_c2011_ab": " The current proportion of upper middle class residents here is {val}%; {moreLess} the average across the UK.",
+    // SOCIAL UPPER MIDDLE CHANGE
+    "socialgrade_perc_change_ab": " In the last ten years, the proportion of upper middle class residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the national average.",
+    // SOCIAL LOWER MIDDLE
+    "socialgrade_perc_c2011_c1": " The current proportion of lower middle class residents here is {val}%; {moreLess} the average across all local authorities.",
+    // SOCIAL LOWER MIDDLE CHANGE
+    "socialgrade_perc_change_c1": " In the last ten years, the proportion of lower middle class residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the national average.",
+    // SOCIAL SKILLED WORKER
+    "socialgrade_perc_c2011_c2": " The current proportion of skilled working class residents here is {val}%; {moreLess} the national average.",
+    // SOCIAL SKILLED WORKER CHANGE
+    "socialgrade_perc_change_c2": " In the last ten years, the amount of skilled working class residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities",
+    // SOCIAL WORKING
+    "socialgrade_perc_c2011_de": " The current proportion of working class or non-working residents here is {val}%; {moreLess} the national average.",
+    // SOCIAL WORKING CHANGE
+    "socialgrade_perc_change_de": " Since the 2001 Census, the proportion of working class or non-working residents here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities.",
+    // TENURE OWNERSHIP
+    "tenure_perc_c2011_owned": " The current rate of home ownership here is {val}%; {moreLess} the average across the UK.",
+    // TENURE OWNERSHIP CHANGE
+    "tenure_perc_change_owned": " In the last ten years, the rate of home ownership here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the national average.",
+    // TENURE SOCIAL RENT
+    "tenure_perc_c2011_rentsocial": "Currently, {val}% of residents here live in social housing; {moreLess} the national average.",
+    // TENURE SOCIAL RENT CHANGE
+    "tenure_perc_change_rentsocial": " In the last ten years, the amount of social housing here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities."
+}
+    
+export { countryifyRoboStrings, countryify2RoboStrings, regionifyRoboStrings, thirdSenRoboStrings };
