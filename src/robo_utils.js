@@ -1,7 +1,13 @@
-import { countryifyRoboStrings, countryify2RoboStrings, regionifyRoboStrings, thirdSenRoboStrings } from './robo_strings.js';
+import { countryify2RoboStrings, regionifyRoboStrings, thirdSenRoboStrings } from './robo_strings.js';
 import { formatUnicorn, adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 
+import countryifyStrings from './robo-strings/countrify-strings.csv';
+
+let countryifyRoboStrings = {};
+countryifyStrings.forEach(d => {countryifyRoboStrings[d.varCode] = d.template;});
+
 function countryify(code, pNum, place, _data, countryRank, label) {
+    console.log(countryifyStrings);
     function compVariable(a, b, c, d) {
         let vari = place['data'][a][b][c][d];
         let array = [], key;
