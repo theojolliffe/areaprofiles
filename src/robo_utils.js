@@ -7,7 +7,6 @@ let countryifyRoboStrings = {};
 countryifyStrings.forEach(d => {countryifyRoboStrings[d.varCode] = d.template;});
 
 function countryify(code, pNum, place, _data, countryRank, label) {
-    console.log(countryifyStrings);
     function compVariable(a, b, c, d) {
         let vari = place['data'][a][b][c][d];
         let array = [], key;
