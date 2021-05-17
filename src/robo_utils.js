@@ -1,4 +1,4 @@
-import { countryifyRoboStrings } from './robo_strings.js';
+import { countryifyRoboStrings, countryify2RoboStrings } from './robo_strings.js';
 import { formatUnicorn, adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 
 function countryify(code, pNum, place, _data, countryRank, label) {
@@ -52,163 +52,17 @@ function countryify2(code, param, pNum, countryRank) {
       paramRank = countryRank[i]
     }
   }  
-	if (param == "population_val_c2011_all") {
-			// TOTAL POPULATION
-			return " This makes it the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " least " : " most ") + "populous area in the UK."
-		}
-		else if (param == "population_val_change_all") {
-			// POPULATION CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "age_perc_c2011_a65plus") {
-			// PROPORTION OVER 65
-			return " This gives the area the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of over 65s in the UK."
-		}
-		else if (param == "age_perc_change_a65plus") {
-			// PROPORTION OVER 65 CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "age_perc_c2011_a015") {
-			// PROPORTION UNDER 16
-			return" This gives the area the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of under 16s in the UK."
-		}
-		else if (param == "age_perc_change_a015") {
-			// PROPORTION UNDER 16 CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "medage_val_c2011_median") {
-			// MEDIAN AGE
-			return " and the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " youngest " : " oldest ") + "population in the UK."
-		}
-		else if (param == "medage_val_change_median") {
-			// MEDIAN AGE CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "density_val_c2011_density") {
-			// POPULATION DENSITY
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " least " : " most ") + "densely populated area in the UK."
-		}
-		else if (param == "economic_perc_c2011_unemployed") {
-			// UNEMPLOYMENT
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "rate of unemployment in the UK."
-		}
-		else if (param == "economic_perc_change_unemployed") {
-			// UNEMPLOYMENT CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "economic_perc_c2011_student") {
-			// STUDENTS
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of students in the UK."
-		}
-		else if (param == "economic_perc_change_student") {
-			// STUDENTS CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "economic_perc_c2011_carer") {
-			// CARER
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of carers in the UK."
-		}
-		else if (param == "economic_perc_change_carer") {
-			// CARER CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "economic_perc_c2011_retired") {
-			// RETIRED
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of retirees in the UK."
-		}
-		else if (param == "economic_perc_change_retired") {
-			// RETIRED CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "economic_perc_c2011_inactive") {
-			// INACTIVE
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "rate of economic inactivity in the UK."
-		}
-		else if (param == "economic_perc_change_inactive") {
-			// INACTIVE CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "ethnicity_perc_c2011_white") {
-			// ETHNICITY WHITE
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of white residents in the UK."
-		}
-		else if (param == "ethnicity_perc_change_white") {
-			// ETHNICITY WHITE CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "ethnicity_perc_c2011_black") {
-			// ETHNICITY BLACK
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of black residents in the UK."
-		}
-		else if (param == "ethnicity_perc_change_black") {
-			// ETHNICITY BLACK CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "ethnicity_perc_c2011_asian") {
-			// ETHNICITY ASIAN
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of Asian residents in the UK."
-		}
-		else if (param == "ethnicity_perc_change_asian") {
-			// ETHNICITY ASIAN CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "ethnicity_perc_c2011_mixed") {
-			// ETHNICITY MIXED
-			return " This is the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of residents with mixed ethnicity in the UK."
-		}
-		else if (param == "ethnicity_perc_change_mixed") {
-			// ETHNICITY MIXED CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "socialgrade_perc_c2011_ab") {
-			// SOCIAL UPPER MIDDLE
-			return " This area has the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of such residents."
-		}
-		else if (param == "socialgrade_perc_change_ab") {
-			// SOCIAL UPPER MIDDLE CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "socialgrade_perc_c2011_c1") {
-			// SOCIAL LOWER MIDDLE
-			return " This area has the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of such residents."
-		}
-		else if (param == "socialgrade_perc_change_c1") {
-			// SOCIAL LOWER MIDDLE CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "socialgrade_perc_c2011_c2") {
-			// SOCIAL SKILLED WORKER
-			return " This area has the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of such residents."
-		}
-		else if (param == "socialgrade_perc_change_c2") {
-			// SOCIAL SKILLED WORKER CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "socialgrade_perc_c2011_de") {
-			// SOCIAL WORKING
-			return " This area has the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "proportion of such residents."
-		}
-		else if (param == "socialgrade_perc_change_de") {
-			// SOCIAL WORKING CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "tenure_perc_c2011_owned") {
-			// TENURE OWNERSHIP
-			return " This is the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "rate of home ownership."
-		}
-		else if (param == "tenure_perc_change_owned") {
-			// TENURE OWNERSHIP CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-		else if (param == "tenure_perc_c2011_rentsocial") {
-			// TENURE SOCIAL RENT
-			return " This is the UK's " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? " lowest " : " highest ") + "rate of social housing."
-		}
-		else if (param == "tenure_perc_change_rentsocial") {
-			// TENURE SOCIAL RENT CHANGE
-			return " This equates to the " + ordinal_suffix_of(paramRank.sqrt) + ((paramRank.value < 0) ? ((paramRank.abVal < 0) ? " greatest decrease " : " smallest increase ") : (paramRank.abVal > 0) ? " greatest increase " : " smallest decrease ") + "across the UK."
-		}
-}	
+  let incDec;
+  if (paramRank.value < 0) {
+      incDec = paramRank.abVal < 0 ? "greatest decrease": "smallest increase";
+  } else {
+      incDec = paramRank.abVal > 0 ? "greatest increase": "smallest decrease";
+  }
+  return formatUnicorn(countryify2RoboStrings[param], {
+      ordinalSuffix: ordinal_suffix_of(paramRank.sqrt),
+      incDec: incDec
+  });
+}
 
 function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regionRank, countryRank, label) {
   // Get data of places with same region
