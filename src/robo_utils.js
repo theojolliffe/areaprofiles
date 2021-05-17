@@ -1,4 +1,4 @@
-import { countryifyRoboStrings, countryify2RoboStrings } from './robo_strings.js';
+import { countryifyRoboStrings, countryify2RoboStrings, regionifyRoboStrings } from './robo_strings.js';
 import { formatUnicorn, adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 
 function countryify(code, pNum, place, _data, countryRank, label) {
@@ -40,8 +40,8 @@ function countryify(code, pNum, place, _data, countryRank, label) {
         place_name: place["name"],
         ordinalSuffix: ordinal_suffix_of(rank.sqrt),
         value: rank.value,
-        valueIsNegative: rank.value < 0,
-        abVal: rank.abVal
+        rankIsNegative: rank.value < 0,
+        abVal: rank.abVal.toLocaleString()
     });
 } 
 
@@ -60,6 +60,7 @@ function countryify2(code, param, pNum, countryRank) {
   }
   return formatUnicorn(countryify2RoboStrings[param], {
       ordinalSuffix: ordinal_suffix_of(paramRank.sqrt),
+      rankIsNegative: paramRank.value < 0,
       incDec: incDec
   });
 }
@@ -95,85 +96,11 @@ function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regio
     ranks.push({'label': a+"_"+b+"_"+c+"_"+d, 'value': varRank, 'sqr': Math.pow(varRank, 2), 'sqrt': Math.sqrt(Math.pow(varRank, 2)), 'abVal': place['data'][a][b][c][d]}); 
   }
   
-  // POPULATION
-  compVariable('population','val','c2011','all')		
-  // POPULATION CHANGE
-  compVariable('population','val','change','all')
-  // POPULATION 65+
-  compVariable('age','perc','c2011','a65plus')
-  // POPULATION 65+ CHANGE
-  compVariable('age','perc','change','a65plus')
-  // POPULATION UNDER 16
-  compVariable('age','perc','c2011','a015')
-  // POPULATION UNDER 16 CHANGE
-  compVariable('age','perc','change','a015')
-  // MEDIAN AGE
-  compVariable('medage','val','c2011','median')		
-  // MEDIAN AGE CHANGE
-  compVariable('medage','val','change','median')
-  // POPULATION DENSITY
-  compVariable('density','val','c2011','density')
-  // UNEMPLOYMENT
- compVariable('economic','perc','c2011','unemployed')
-  // STUDENTS
-  compVariable('economic','perc','c2011','student')
-  // CARER
-  compVariable('economic','perc','c2011','carer')
-  // RETIRED
-  compVariable('economic','perc','c2011','retired')
-  // ECONOMICALLY INACTIVE
-  compVariable('economic','perc','c2011','inactive')
-  // UNEMPLOYMENT CHANGE
-	compVariable('economic','perc','change','unemployed')
-  // STUDENTS CHANGE
-  compVariable('economic','perc','change','student')
-  // CARER CHANGE
-  compVariable('economic','perc','change','carer')
-  // RETIRED CHANGE
-  compVariable('economic','perc','change','retired')
-  // ECONOMICALLY INACTIVE CHANGE
-  compVariable('economic','perc','change','inactive')
-  // WHITE ETHNICITY 
-  compVariable('ethnicity','perc','c2011','white')
-  // WHITE ETHNICITY CHANGE
-  compVariable('ethnicity','perc','change','white')		
-  // BLACK ETHNICITY
-  compVariable('ethnicity','perc','c2011','black')
-  // BLACK ETHNICITY CHANGE
-  compVariable('ethnicity','perc','change','black')
-  // ASIAN ETHNICITY 
-  compVariable('ethnicity','perc','c2011','asian')
-  // ASIAN ETHNICITY CHANGE
-  compVariable('ethnicity','perc','change','asian')			
-  // MIXED ETHNICITY 
-  compVariable('ethnicity','perc','c2011','mixed')
-  // MIXED ETHNICITY CHANGE
-  compVariable('ethnicity','perc','change','mixed')		
-  // SOCIAL CLASS UPPPER MIDDLE *** DATA LOOKS WRONG %s NOT ADDING UP
-  compVariable('socialgrade','perc','c2011','ab')
-  // SOCIAL CLASS UPPPER MIDDLE CHANGE
-  compVariable('socialgrade','perc','change','ab')		
-  // SOCIAL CLASS LOWER MIDDLE 
-  compVariable('socialgrade','perc','c2011','c1')
-  // SOCIAL CLASS LOWER MIDDLE CHANGE
-  compVariable('socialgrade','perc','change','c1')		
-  // SOCIAL CLASS SKILLED WORKING 
-  compVariable('socialgrade','perc','c2011','c2')
-  // SOCIAL CLASS SKILLED WORKING CHANGE
-  compVariable('socialgrade','perc','change','c2')		
-  // SOCIAL CLASS WORKING/NON-WORKING 
-  compVariable('socialgrade','perc','c2011','de')
-  // SOCIAL CLASS WORKING/NON-WORKING CHANGE
-  compVariable('socialgrade','perc','change','de')
-  // TENURE OWNERSHIP 
-  compVariable('tenure','perc','c2011','owned')
-  // TENURE OWNERSHIP CHANGE
-  compVariable('tenure','perc','change','owned')	
-  // TENURE SOCIAL RENT 
-  compVariable('tenure','perc','c2011','rentsocial')
-  // TENURE SOCIAL RENT CHANGE
-  compVariable('tenure','perc','change','rentsocial')	
-
+  for (let key in regionifyRoboStrings) {
+    if (regionifyRoboStrings.hasOwnProperty(key)) {
+        compVariable(...key.split("_"));
+    }
+  }
 
   ranks.sort(function(a, b) {
       return a.sqr - b.sqr;
@@ -184,162 +111,18 @@ function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regio
 		label[0] = ranks[pNum].label
 	}
   
-	if (ranks[pNum].label == "population_val_c2011_all") {
-			// TOTAL POPULATION
-			return ((pNum==1)? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " smallest " : " largest ") + "population in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + ", with " + ranks[pNum].abVal.toLocaleString() + " inhabitants."
-	} 
-	else if (ranks[pNum].label == "population_val_change_all") {
-			// POPULATION CHANGE
-			return "Since 2010, " + (oddNumberedPara ? "this area": placeregion["LAD18NM"]) + " has seen the " + ordinal_suffix_of(ranks[pNum].sqrt) + " largest population " + ((ranks[pNum].value < 0) ? "decrease" : "increase") + " in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + ", with a change of " + ranks[pNum].abVal + "%."
-	} 
-	else if (ranks[pNum].label == "age_perc_c2011_a65plus") {
-			// PROPORTION OVER 65
-			return (oddNumberedPara ? "this area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of residents " + "(" + ranks[pNum].abVal + "%)" + " over the age of 65 in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + "."
-	} 
-	else if (ranks[pNum].label == "density_val_c2011_density") {
-			// POPULATION DENSITY
-			return (oddNumberedPara ? "this area": placeregion["LAD18NM"]) + " is the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " least " : " most ") + "densely populated part of " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] +", with " + ranks[pNum].abVal + " inhabitants per hectare."
-	}
-	else if (ranks[pNum].label == "age_perc_change_a65plus") {
-			// PROPORTION OVER 65 CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen the " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest increase in the proportion of residents " + "(" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)" + ((ranks[pNum].value < 0) ? " under " : " over ") + "the age of 65 in" + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + "."
-	} 
-	else if (ranks[pNum].label == "age_perc_c2011_a015") {
-			// PROPORTION UNDER 16
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of residents " + "(" + ranks[pNum].abVal + "%)" + " under the age of 16 in" + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + "."
-	} 
-	else if (ranks[pNum].label == "age_perc_change_a015") {
-			// PROPORTION UNDER 16 CHANGE
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has seen the " + ordinal_suffix_of(ranks[pNum].sqrt) + " greatest increase in the proportion of residents " + "(" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)" + ((ranks[pNum].value < 0) ? " under " : " over ") + "the age of 16 in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"] + "."
-	} 
-	else if (ranks[pNum].label == "medage_val_c2011_median") {
-			// MEDIAN AGE
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "median age " + "(" + ranks[pNum].abVal + ")" + " in" + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : " the ") + placeregion["RGN18NM"]
-	} 
-	else if (ranks[pNum].label == "medage_val_change_median") {
-			// MEDIAN AGE CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in residents' median age " + "(" + ranks[pNum].abVal + ")."
-	} 
-	else if (ranks[pNum].label == "economic_perc_c2011_unemployed") {
-			// UNEMPLOYMENT
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of unemployment in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +", with " + ranks[pNum].abVal + "% out of work."
-	}
-	else if (ranks[pNum].label == "economic_perc_change_unemployed") {
-			// UNEMPLOYMENT CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in rate of unemployment (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_c2011_student") {
-			// STUDENTS
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of students in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +", with " + ranks[pNum].abVal + "% currently studying."
-	}
-	else if (ranks[pNum].label == "economic_perc_change_student") {
-			// STUDENTS CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in the propotion of students (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_c2011_carer") {
-			// CARER
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of carers in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +", at " + ranks[pNum].abVal + "%."
-	}
-	else if (ranks[pNum].label == "economic_perc_change_carer") {
-			// CARER CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in the proportion of carers (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_c2011_retired") {
-			// RETIRED
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of retirees in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +" (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_change_retired") {
-			// RETIRED CHANGE 
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in the proportion of retirees (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_c2011_inactive") {
-			// INACTIVE
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " has the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of economic inactivity in " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +" (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "economic_perc_change_inactive") {
-			// INACTIVE CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in rate of economic inactivity (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_c2011_white") {
-			// ETHNICITY WHITE
-			return (oddNumberedPara ? "This area": placeregion["LAD18NM"]) + " is the " + " is " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of white residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_change_white") {
-			// ETHNICITY WHITE CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of white residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_c2011_black") {
-			// ETHNICITY BLACK
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of black residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_change_black") {
-			// ETHNICITY BLACK CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of black residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_c2011_asian") {
-			// ETHNICITY ASIAN
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of asian residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_change_asian") {
-			// ETHNICITY ASIAN CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of asian residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_c2011_mixed") {
-			// ETHNICITY MIXED
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of residents with mixed ethnicity (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "ethnicity_perc_change_mixed") {
-			// ETHNICITY MIXED CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of residents with mixed ethnicity (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_c2011_ab") {
-			// SOCIAL UPPER MIDDLE
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of upper middle class residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_change_ab") {
-			// SOCIAL UPPER MIDDLE CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of upper middle class residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_c2011_c1") {
-			// SOCIAL LOWER MIDDLE
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of lower middle class residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_change_c1") {
-			// SOCIAL LOWER MIDDLE CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of lower middle class residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_c2011_c2") {
-			// SOCIAL SKILLED WORKER
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of skilled working class residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_change_c2") {
-			// SOCIAL SKILLED WORKER CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of skilled working class residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_c2011_de") {
-			// SOCIAL WORKING
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of working class or non-working residents (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "socialgrade_perc_change_de") {
-			// SOCIAL WORKING CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of working class or non-working residents (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "tenure_perc_c2011_owned") {
-			// TENURE OWNERSHIP
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "rate of home ownership (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "tenure_perc_change_owned") {
-			// TENURE OWNERSHIP CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in rate of home ownership (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "tenure_perc_c2011_rentsocial") {
-			// TENURE SOCIAL RENT
-			return (oddNumberedPara ? "This": placeregion["LAD18NM"]) + " is the " + placeregion["RGN18NM"] +" area with the " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? " lowest " : " highest ") + "proportion of social housing (" + ranks[pNum].abVal + "%)."
-	}
-	else if (ranks[pNum].label == "tenure_perc_change_rentsocial") {
-			// TENURE SOCIAL RENT CHANGE
-			return "In the last ten years, "+ (oddNumberedPara ? "this area": placeregion["LAD18NM"]) +" has seen " + ((placeregion["RGN18NM"] == "London" | placeregion["RGN18NM"] == "Wales") ? "" : "the ") + placeregion["RGN18NM"] +"'s " + ordinal_suffix_of(ranks[pNum].sqrt) + ((ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? " greatest decrease " : " smallest increase ") : (ranks[pNum].abVal > 0) ? " greatest increase " : " smallest decrease ") + "in proportion of social housing (" + ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%)."
-	}	
+  return formatUnicorn(regionifyRoboStrings[ranks[pNum].label], {
+      ordinalSuffix: ordinal_suffix_of(ranks[pNum].sqrt),
+      rankIsNegative: ranks[pNum].value < 0,
+      incDec: (ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? "greatest decrease" : "smallest increase") : (ranks[pNum].abVal > 0) ? "greatest increase" : "smallest decrease",
+      abVal: ranks[pNum].abVal.toLocaleString(),
+      abValPctChange: ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%",
+      ladName: placeregion["LAD18NM"],
+      regionName: placeregion["RGN18NM"],
+      firstPara: pNum == 1,
+      oddNumberedPara: oddNumberedPara,
+      londonOrWales: "{regionName}" == "London" | "{regionName}" == "Wales"
+  });
 }
 	
 function getHeadline(place, total, breaks) {

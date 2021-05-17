@@ -13,7 +13,15 @@ function formatUnicorn(str) {
             // replace {key} with the value of args[key]
             str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
             // replace {key?valueIfTrue:valueIfFalse} with
-            // the value of (args[key] ? valueIfTrue : valueIfFalse)
+            // the value of (args[key] ? valueIfTrue : valueIfFalse).
+            // If p1 or p2 is a braced variable name, get its value
+            // TODO make this tidier / recursive
+            str = str.replace(new RegExp("\\{" + key + "\\?\\{([^?:}]*)\\}:\\{([^?:}]*)\\}\\}", "gi"),
+                  (match, p1, p2) => args[key] ? args[p1.slice(1, -1)] : args[p2.slice(1, -1)]);
+            str = str.replace(new RegExp("\\{" + key + "\\?\\{([^?:}]*)\\}:([^?:}]*)\\}", "gi"),
+                  (match, p1, p2) => args[key] ? args[p1.slice(1, -1)] : p2);
+            str = str.replace(new RegExp("\\{" + key + "\\?([^?:}]*):\\{([^?:}]*)\\}\\}", "gi"),
+                  (match, p1, p2) => args[key] ? p1 : args[p2.slice(1, -1)]);
             str = str.replace(new RegExp("\\{" + key + "\\?([^?:}]*):([^?:}]*)\\}", "gi"),
                   (match, p1, p2) => args[key] ? p1 : p2);
         }
