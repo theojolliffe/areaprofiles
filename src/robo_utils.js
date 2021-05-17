@@ -1,10 +1,18 @@
-import { countryify2RoboStrings, regionifyRoboStrings, thirdSenRoboStrings } from './robo_strings.js';
 import { formatUnicorn, adjectify, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 
 import countryifyStrings from './robo-strings/countrify-strings.csv';
+import countryify2Strings from './robo-strings/countryify2-strings.csv';
+import regionifyStrings from './robo-strings/regionify-strings.csv';
+import thirdSenStrings from './robo-strings/third-sen-strings.csv';
 
 let countryifyRoboStrings = {};
 countryifyStrings.forEach(d => {countryifyRoboStrings[d.varCode] = d.template;});
+let countryify2RoboStrings = {};
+countryify2Strings.forEach(d => {countryify2RoboStrings[d.varCode] = d.template;});
+let regionifyRoboStrings = {};
+regionifyStrings.forEach(d => {regionifyRoboStrings[d.varCode] = d.template;});
+let thirdSenRoboStrings = {};
+thirdSenStrings.forEach(d => {thirdSenRoboStrings[d.varCode] = d.template;});
 
 function countryify(code, pNum, place, _data, countryRank, label) {
     function compVariable(a, b, c, d) {
