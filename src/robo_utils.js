@@ -9,10 +9,7 @@ function countryify(code, pNum, place, _data, countryRank, label) {
             array.push(_data[key]['data'][a][b][c][d]);
         }
         array.sort(function(a, b){return b-a});
-        function checkIndex(ind) {
-            return ind == vari;
-        }
-        let varRank = array.findIndex(checkIndex) + 1 
+        let varRank = array.indexOf(vari) + 1 
         // If rank is in the bottom half assign negative value
         if (varRank > array.length/2) {
             varRank = varRank-array.length-1
@@ -68,8 +65,8 @@ function countryify2(code, param, pNum, countryRank) {
 function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regionRank, countryRank, label) {
   // Get data of places with same region
   let placeregion = _regiondata[code];
-  let result = {}, key;
-  for (key in _regiondata) {
+  let result = {}
+  for (let key in _regiondata) {
       if (_regiondata[key]['RGN18CD'] == placeregion["RGN18CD"]) {
          result[key] = _data[key];
       }
@@ -81,14 +78,11 @@ function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regio
   function compVariable(a, b, c, d) {
     let vari = place['data'][a][b][c][d];
     let array = []
-    for (key in result) {
+    for (let key in result) {
       array.push(result[key]['data'][a][b][c][d]);
     }
     array.sort(function(a, b){return b-a});
-    function checkIndex(ind) {
-      return ind == vari;
-    }
-    let varRank = array.findIndex(checkIndex) + 1 
+    let varRank = array.indexOf(vari) + 1 
     // If rank is in the bottom half assign negative value
     if (varRank > array.length/2) {
       varRank = varRank-array.length-1
@@ -180,13 +174,12 @@ function getHeadline(place, total, breaks) {
 }
 
 function thirdSen(param, pNum, paramArray, place, breaks) {
-    let changeSwitch;
-    if (paramArray[2]=="change") {
-        changeSwitch = "c2011"
-    } else if (paramArray[2]=="c2011") {
-        changeSwitch = "change"
-    }
-
+  let changeSwitch;
+  if (paramArray[2]=="change") {
+      changeSwitch = "c2011"
+  } else if (paramArray[2]=="c2011") {
+      changeSwitch = "change"
+  }
 
   let val = place.data[paramArray[0]][paramArray[1]][changeSwitch][paramArray[3]];
 
