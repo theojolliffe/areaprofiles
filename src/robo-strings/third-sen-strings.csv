@@ -4,7 +4,7 @@ varCode,comment,template
 "age_perc_c2011_a65plus","PROPORTION OVER 65"," Currently, {val}% of residents here are over the age of 65; {moreLess} the national average."
 "density_val_c2011_density","POPULATION DENSITY"," The current population density here is {val} people per hectare; {moreLess} the national average."
 "density_val_change_density","DENSITY CHANGE",""
-"age_perc_change_a65plus",// PROPORTION OVER 65 CHAN"G"," In the last ten years, the proportion of over 65s here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities."
+"age_perc_change_a65plus","PROPORTION OVER 65 CHANGE"," In the last ten years, the proportion of over 65s here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across all local authorities."
 "age_perc_c2011_a015","PROPORTION UNDER 16"," Currently, {val}% of residents here are under the age of 16; {moreLess} the average across the UK."
 "age_perc_change_a015","PROPORTION UNDER 16 CHANGE"," In the last ten years, the proportion of under 16s here has {valIsNegative?decreased:increased} by {absVal}%; {moreLess} the average across the UK."
 "medage_val_c2011_median","MEDIAN AGE"," The current median age of residents here is {val} years old; {moreLess} the national average."
