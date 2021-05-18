@@ -3,35 +3,53 @@
   import "./sixteens_main.css";
   import "./roboto_slab.css";
   import Profile from './Profile.svelte';
+  import ONSHeader from './ONSHeader.svelte';
+  import ONSFooter from './ONSFooter.svelte';
+  import Breadcrumbs from './Breadcrumbs.svelte';
+  import AreasWithinSelector from './AreasWithinSelector.svelte';
+  import KeyStats from './KeyStats.svelte';
+  import PrototypeWarning from './PrototypeWarning.svelte';
   import { data, metadata } from './stores.js';
   import Select from './Select.svelte';
-  /*let __areaChildren__ = [{"id":"E08000016","name":"Barnsley","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/barnsley/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000032","name":"Bradford","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/bradford/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000033","name":"Calderdale","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/calderdale/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000017","name":"Doncaster","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/doncaster/","type":"Metropolitan District","areaCode":"E08"},{"id":"E06000011","name":"East Riding of Yorkshire","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/east-riding-of-yorkshire/","type":"Unitary Authority","areaCode":"E06"},{"id":"E06000010","name":"Kingston upon Hull, City of","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/kingston-upon-hull-city-of/","type":"Unitary Authority","areaCode":"E06"},{"id":"E08000034","name":"Kirklees","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/kirklees/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000035","name":"Leeds","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/leeds/","type":"Metropolitan District","areaCode":"E08"},{"id":"E06000012","name":"North East Lincolnshire","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/north-east-lincolnshire/","type":"Unitary Authority","areaCode":"E06"},{"id":"E06000013","name":"North Lincolnshire","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/north-lincolnshire/","type":"Unitary Authority","areaCode":"E06"},{"id":"E10000023","name":"North Yorkshire","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/north-yorkshire/","type":"County","areaCode":"E10"},{"id":"E08000018","name":"Rotherham","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/rotherham/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000019","name":"Sheffield","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/sheffield/","type":"Metropolitan District","areaCode":"E08"},{"id":"E08000036","name":"Wakefield","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/wakefield/","type":"Metropolitan District","areaCode":"E08"},{"id":"E06000014","name":"York","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/york/","type":"Unitary Authority","areaCode":"E06"}]
-        
-  let __areaSiblings__ = [{"id":"E12000004","name":"East Midlands","permalink":"/prototypes/area-profiles/england/east-midlands/","type":"Region","areaCode":"E12"},{"id":"E12000006","name":"East of England","permalink":"/prototypes/area-profiles/england/east-of-england/","type":"Region","areaCode":"E12"},{"id":"E12000007","name":"London","permalink":"/prototypes/area-profiles/england/london/","type":"Region","areaCode":"E12"},{"id":"E12000001","name":"North East","permalink":"/prototypes/area-profiles/england/north-east/","type":"Region","areaCode":"E12"},{"id":"E12000002","name":"North West","permalink":"/prototypes/area-profiles/england/north-west/","type":"Region","areaCode":"E12"},{"id":"E12000008","name":"South East","permalink":"/prototypes/area-profiles/england/south-east/","type":"Region","areaCode":"E12"},{"id":"E12000009","name":"South West","permalink":"/prototypes/area-profiles/england/south-west/","type":"Region","areaCode":"E12"},{"id":"E12000005","name":"West Midlands","permalink":"/prototypes/area-profiles/england/west-midlands/","type":"Region","areaCode":"E12"},{"id":"E12000003","name":"Yorkshire and The Humber","permalink":"/prototypes/area-profiles/england/yorkshire-and-the-humber/","type":"Region","areaCode":"E12"}]*/
-	let place;
-	$: place = $data[selected];
 
-	let options = [];
-	for (const i in $data) {
-		let option = {};
-		option.value = i;
-		option.label = $data[i].name;
-		options.push(option);
-	}
-	options.sort((a, b) => a.label.localeCompare(b.label, 'en', {ignorePunctuation: true}));
-    let selected = null;
+  let place, place_name;
+
+  let keyStats = {
+      population: 0,
+      popIncrease: 0,
+      sizeHectares: 0,
+      popDensity: 0 
+  };
+  $: {
+      place = $data[selected];
+      if (place) {
+          console.log(place);
+          keyStats = {
+              population: place.data.population.val.c2011.all.toLocaleString(),
+              popIncrease: Math.floor(place.data.population.val.change.all * place.data.population.val.c2001.all / 100).toLocaleString(),
+              sizeHectares: Math.floor(place.data.population.val.c2011.all / place.data.density.val.c2011.density).toLocaleString(),
+              popDensity: place.data.density.val.c2011.density.toLocaleString()
+          };
+      }
+      place_name = place?.name || "Place Name";
+  };
+
+  let options = [];
+  for (const i in $data) {
+  	let option = {};
+  	option.value = i;
+  	option.label = $data[i].name;
+  	options.push(option);
+  }
+  options.sort((a, b) => a.label.localeCompare(b.label, 'en', {ignorePunctuation: true}));
+  let selected = null;
+
+  console.log(selected);
 </script>
 
 <style>
 :global(body) {
   margin: 0;
-}
-
-/**
-Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
-*/
-
-:global(body) {
   font-family:
 		system-ui,
 		-apple-system, /* Firefox supports this but not yet `system-ui` */
@@ -45,268 +63,17 @@ Improve consistency of default fonts in all browsers. (https://github.com/sindre
 }
 </style>
 
-<div class="bg-oceanBlue text-white">
-    <div class="wrapper">
-        <div class="prototype py-2">
-            <p class="my-2 text-sm">
-                <strong>Warning</strong> this is a prototype. The content may not be complete or accurate.
-            </p>
-        </div>
-    </div>
-</div>
-            <header class="border-bottom--grey3-sm border-bottom--grey3-md">
-    <a class="skiplink" href="#main" tabindex="0">
-		Skip to main content
-	</a>
+<ONSHeader></ONSHeader>
 
-    <div class="wrapper">
-        <div class="header col-wrap">
-
-            <div class="col col--lg-one-third col--md-one-third">
-  <a href="https://www.ons.gov.uk/">
-    <img class="logo" src="https://cdn.ons.gov.uk/assets/images/ons-logo/v2/ons-logo.svg" alt="Office for National Statistics">
-  </a>
-</div>
-
-
-            
-                <div class="col col--lg-two-thirds col--md-two-thirds hide--sm print--hide language--js__container">
-  <dl class="language js--hide" style="display: none;">
-    <dt class="language__title">Language:</dt>
-    <dd class="language__item">
-      <a href="//cy.ons.gov.uk/surveys/informationforbusinesses" class="language__link icon--hide">Cymraeg (CY)</a>
-    </dd>
-  </dl>
-  <form class="language language--js js--show" style="display: block;">
-    <label class="language--js__label" for="lang">Language:</label>
-    <select class="language--js__select" id="lang" name="lang">
-      <option value="english" data-url="//www.www.ons.gov.uk/surveys/informationforbusinesses" selected="selected">English (EN)</option>
-      <option value="welsh" data-url="//cy.ons.gov.uk/surveys/informationforbusinesses">Cymraeg (CY)</option>
-    </select>
-  </form>
-</div>
-
-            
-
-            
-                <div class="secondary-nav col col--lg-two-thirds col--md-two-thirds print--hide">
-  <ul class="secondary-nav__list js-nav-clone__list">
-    <li class="secondary-nav__item">
-      <a class="secondary-nav__link  js-nav-clone__link" href="/releasecalendar">Release calendar</a>
-    </li>
-    <li class="secondary-nav__item">
-      <a class="secondary-nav__link  js-nav-clone__link" href="/methodology">Methodology</a>
-    </li>
-    <li class="secondary-nav__item">
-      <a class="secondary-nav__link  js-nav-clone__link" href="/news">Media</a>
-    </li>
-    <li class="secondary-nav__item">
-      <a class="secondary-nav__link  js-nav-clone__link" href="/aboutus">About</a>
-    </li>
-    <li class="secondary-nav__item">
-      <a class="secondary-nav__link icon--hide js-nav-clone__link" target="_blank" rel="noopener noreferrer" href="https://blog.ons.gov.uk/">Blog</a>
-    </li>
-  </ul>
-</div>
-
-            
-
-        </div>
-    </div>
-
-    
-        <div class="primary-nav print--hide">
-  <nav>
-    <ul class="nav--controls">
-      <li class="nav--controls__item">
-        <a href="#nav-primary" id="menu-toggle" aria-controls="nav-primary" class="nav--controls__menu">
-          <span class="nav--controls__text">Menu</span>
-        </a>
-      </li>
-      <li class="nav--controls__item ">
-        <a href="#nav-search" id="search-toggle" aria-controls="nav-search" class="nav--controls__search">
-          <span class="nav--controls__text">Search</span>
-        </a>
-      </li>
-    </ul>
-    <div class="wrapper nav-main--hidden" id="nav-primary" aria-expanded="false">
-      <ul class="primary-nav__list">
-        <li class="primary-nav__item  js-nav hide--sm old-ie--display-block"><a class="primary-nav__link col col--md-7 col--lg-9" href="/">Home</a></li>
-        <li class="primary-nav__item js-nav js-expandable">
-          <a class="primary-nav__link col col--md-8 col--lg-10" href="/businessindustryandtrade" aria-haspopup="true">Business, industry and trade</a>
-          <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/business">Business</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/changestobusiness">Changes to business</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/constructionindustry">Construction industry</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/itandinternetindustry">IT and internet industry</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/internationaltrade">International trade</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/manufacturingandproductionindustry">Manufacturing and production industry</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/retailindustry">Retail industry</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/businessindustryandtrade/tourismindustry">Tourism industry</a>
-            </li>
-          </ul>
-        </li>
-        <li class="primary-nav__item js-nav js-expandable">
-          <a class="primary-nav__link col col--md-8 col--lg-10" href="/economy" aria-haspopup="true">Economy</a>
-          <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/economicoutputandproductivity">Economic output and productivity</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/envgrey3mentalaccounts">Envgrey3mental accounts</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/governmentpublicsectorandtaxes">Government, public sector and taxes</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/grossdomesticproductgdp">Gross Domestic Product (GDP)</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/grossvalueaddedgva">Gross Value Added (GVA)</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/inflationandpriceindices">Inflation and price indices</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/investmentspensionsandtrusts">Investments, pensions and trusts</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/nationalaccounts">National accounts</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/economy/regionalaccounts">Regional accounts</a>
-            </li>
-          </ul>
-        </li>
-        <li class="primary-nav__item js-nav js-expandable">
-          <a class="primary-nav__link col col--md-8 col--lg-10" href="/employmentandlabourmarket" aria-haspopup="true">Employment and labour market</a>
-          <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/employmentandlabourmarket/peopleinwork">People in work</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/employmentandlabourmarket/peoplenotinwork">People not in work</a>
-            </li>
-          </ul>
-        </li>
-        <li class="primary-nav__item js-nav js-expandable">
-          <a class="primary-nav__link col col--md-8 col--lg-10" href="/peoplepopulationandcommunity" aria-haspopup="true">People, population and community</a>
-          <ul class="primary-nav__child-list col col--md-16 col--lg-20 js-expandable__content js-nav-hidden jsEnhance" aria-expanded="false" aria-label="submenu">
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/birthsdeathsandmarriages">Births, deaths and marriages</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/crimeandjustice">Crime and justice</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/culturalidentity">Cultural identity</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/educationandchildcare">Education and childcare</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/elections">Elections</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/healthandsocialcare">Health and social care</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/householdcharacteristics">Household characteristics</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/housing">Housing</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/leisureandtourism">Leisure and tourism</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/personalandhouseholdfinances">Personal and household finances</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/populationandmigration">Population and migration</a>
-            </li>
-            <li class="primary-nav__child-item  js-expandable__child">
-              <a class="primary-nav__child-link" tabindex="-1" href="/peoplepopulationandcommunity/wellbeing">Well-being</a>
-            </li>
-          </ul>
-        </li>
-        <li class="primary-nav__item  js-nav">
-          <a class="primary-nav__link  col col--md-8 col--lg-10" href="/surveys">
-Taking part in a survey?
-</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-</div>
-
-    
-
-    
-        <div class="search nav-search--hidden print--hide" id="searchBar">
-    <div class="wrapper" role="search">
-        <form class="col-wrap search__form" action="search.njk">
-            <label class="search__label col col--md-23 col--lg-24" for="nav-search">Search for a keyword(s) or time series ID</label>
-            <input type="search" autocomplete="off" class="search__input col col--md-21 col--lg-32" id="nav-search" name="q" value="">
-            <button type="submit" class="search__button col--md-3 col--lg-3" id="nav-search-submit">
-                <span class="visuallyhidden">Search</span>
-                <span class="icon icon-search--light"></span>
-            </button>
-        </form>
-    </div>
-</div>
-    
-
-</header>
     <div class="wrapper" id="top">
-    
-        <nav aria-label="Breadcrumbs">
-    <div class="breadcrumb border-0 print--hide">
-        <ol class="breadcrumb__list">
-            
-                <li class="breadcrumb__item text-sm">
-                    
-                        <a class="breadcrumb__link" href="/prototypes/area-profiles/">Home</a>
-                    
-                </li>
-            
-                <li class="breadcrumb__item text-sm">
-                    
-                        <a class="breadcrumb__link" href="/prototypes/area-profiles/england/">England</a>
-                    
-                </li>
-            
-                <li class="breadcrumb__item text-sm">
-                    
-                        Yorkshire and The Humber
-                    
-                </li>
-            
-        </ol>
-    </div>
-</nav>
-    
+
+    <Breadcrumbs {place_name}></Breadcrumbs>
 
     <header class="mb-8" >
         <Select {options} bind:selected message='Select a place' />
-        <h1 class="mb-1 p-0 text-3xl font-bold">Yorkshire and The Humber</h1>
-        <h2 class="mt-0 text-lg">Region
-             (E12000003) 
+        <h1 class="mb-1 p-0 text-3xl font-bold">{place_name}</h1>
+        <h2 class="mt-0 text-lg">Local Authority
+             (LA code...) 
         </h2>
     </header>
 
@@ -322,7 +89,7 @@ Taking part in a survey?
                 
                     <li class="m-0 mb-2 p-0 relative">
                         <span class="absolute">—</span>
-                        <a class="pl-8 inline-block" href="#areas-within-yorkshire-and-the-humber">Areas within Yorkshire and The Humber</a>
+                        <a class="pl-8 inline-block" href="#areas-within-yorkshire-and-the-humber">Areas within {place_name}</a>
                     </li>
                 
                     <li class="m-0 mb-2 p-0 relative">
@@ -360,7 +127,7 @@ Taking part in a survey?
         <div class="col-span-2 mb-6" id="summary">
             <h2 class="text-md font-bold mb-2">Summary</h2>
             <Profile {options} {selected} {place}></Profile>
-            <!-- <p>This area profile covers the Region of Yorkshire and The Humber and is compiled of data from the 2021 Census.</p>
+            <!-- <p>This area profile covers the ... of {place_name} is compiled of data from the 2021 Census.</p>
             <p>The area profile covers areas within Yorkshire and The Humber and topics such as the population, households, housing, economy, education and health. </p>
             <p>The profile also contains all area related datasets.</p> -->
         </div>
@@ -369,48 +136,18 @@ Taking part in a survey?
 
 <section class="mb-8">
     <div class="wrapper">
-        <div data-hello></div>
+<!--        <div data-hello></div>
         <div data-robojournalism></div>
         <div data-chart style="height: 100px; width: 250px"></div>
+-->
     </div>
 </section>
 
-<section id="key-stats">
-    <div class="wrapper">
-        <header>
-            <h2 class="text-md font-bold mb-4">Key statistics</h2>
-        </header>
-        <div class="mb-8">
-            <ul class="list-none divide-y divide-grey3 md:flex md:divide-y-0 md:divide-x md:-ml-4">
-                
-                    <li class="p-0 pt-2 mb-2 md:m-0 md:mb-2 md:px-4">
-                        <h3 class="text-base font-normal md:mb-2">Resident population as of 2021</h3>
-                        <div class="text-lg font-bold">8,173,941</div>
-                    </li>
-                
-                    <li class="p-0 pt-2 mb-2 md:m-0 md:mb-2 md:px-4">
-                        <h3 class="text-base font-normal md:mb-2">Population increase since 2011</h3>
-                        <div class="text-lg font-bold">8%</div>
-                    </li>
-                
-                    <li class="p-0 pt-2 mb-2 md:m-0 md:mb-2 md:px-4">
-                        <h3 class="text-base font-normal md:mb-2">Total area size (Hectares)</h3>
-                        <div class="text-lg font-bold">157,215.08</div>
-                    </li>
-                
-                    <li class="p-0 pt-2 mb-2 md:m-0 md:mb-2 md:px-4">
-                        <h3 class="text-base font-normal md:mb-2">Population density (People per hectare)</h3>
-                        <div class="text-lg font-bold">52.0</div>
-                    </li>
-                
-            </ul>
-        </div>
-    </div>
-</section>
+<KeyStats {keyStats}></KeyStats>
 
 <section class="mb-8">
     <header class="sr-only">
-        <h2>Map of Yorkshire and The Humber</h2>
+        <h2>Map of {place_name}</h2>
     </header>
     <div class="relative" style="height:650px">
         <div class="absolute bottom-0 md:top-0 left-0 w-full sm:p-4 z-50 md:sticky md:w-1/2 lg:w-1/3">
@@ -456,114 +193,7 @@ Taking part in a survey?
     </div>
 </section>
 
-
-
-
-
-
-    <section class="wrapper mb-8">
-        <div class="mb-8" id="areas-within-yorkshire-and-the-humber">
-            <header>
-                <h2 class="text-md font-bold mb-4">Areas within Yorkshire and The Humber</h2>
-            </header>
-            
-
-<div>
-    <ul class="flex">
-        
-            
-                <li class="m-0 p-0 mr-2 -mb-px border-grey1 border border-b-0 bg-white z-10">
-                    <h3 class="text-base font-bold m-0 py-2 px-4">Local Authorities</h3>
-                </li>
-            
-        
-            
-                <li class="m-0 p-0 mr-2">
-                    <a href="" class="text-grey1 hover:text-grey1 bg-grey4 hover:bg-grey3 py-2 px-4 block">Statistical areas</a>
-                </li>
-            
-        
-            
-                <li class="m-0 p-0 mr-2">
-                    <a href="" class="text-grey1 hover:text-grey1 bg-grey4 hover:bg-grey3 py-2 px-4 block">Census areas</a>
-                </li>
-            
-        
-    </ul>
-    <div class="border-t border-grey1 py-4 bg-white relative">
-        
-<ul class="list-none m-0 p-0 text-cols-2 md:text-cols-3 leading-relaxed">
-    
-        <li class="m-0 p-0">
-            <a href="barnsley/">Barnsley</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/bradford/">Bradford</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/calderdale/">Calderdale</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/doncaster/">Doncaster</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/east-riding-of-yorkshire/">East Riding of Yorkshire</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/kingston-upon-hull-city-of/">Kingston upon Hull, City of</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/kirklees/">Kirklees</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/leeds/">Leeds</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/north-east-lincolnshire/">North East Lincolnshire</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/north-lincolnshire/">North Lincolnshire</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/north-yorkshire/">North Yorkshire</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/rotherham/">Rotherham</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/sheffield/">Sheffield</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/wakefield/">Wakefield</a>
-        </li>
-    
-        <li class="m-0 p-0">
-            <a href="/prototypes/area-profiles/england/yorkshire-and-the-humber/york/">York</a>
-        </li>
-    
-</ul>
-
-    </div>
-</div>
-        </div>
-        <div class="mb-8">
-            <a class="text-base icon-arrow p-3 pl-2 border border-blumine border-opacity-30  leading-none" href="#top">Back to top</a>
-        </div>
-    </section>
-
+<AreasWithinSelector></AreasWithinSelector>
 
 <section class="wrapper">
     <div>
@@ -2733,80 +2363,4 @@ Taking part in a survey?
 </div>
 </section>
 
-
-            <footer class="print--hide">
-    <h2 class="visuallyhidden">Footer links</h2>
-    <div class="footer">
-        <div class="wrapper">
-            <nav>
-                <div class="footer-nav col-wrap">
-                    <div class="col col--lg-one-third col--md-one-third">
-                        <h3 class="footer-nav__heading">Help</h3>
-                        <ul class="footer-nav__list">
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/help/accessibility">Accessibility</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/help/cookiesandprivacy">Cookies and privacy</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/help/termsandconditions">Terms and conditions</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col col--lg-one-third col--md-one-third">
-                        <h3 class="footer-nav__heading">About ONS</h3>
-                        <ul class="footer-nav__list">
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/aboutus/whatwedo">What we do</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/aboutus/careers">Careers</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/aboutus/contactus">Contact us</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/news">News</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.ons.gov.uk/aboutus/transparencyandgovernance/freedomofinformationfoi">Freedom of Information</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col col--lg-one-third col--md-one-third">
-                        <h3 class="footer-nav__heading">Connect with us</h3>
-                        <ul class="footer-nav__list">
-                            <li class="footer-nav__item">
-                                <a href="https://twitter.com/ONS" class="icon--hide" target="_blank">Twitter</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.facebook.com/ONS" class="icon--hide" target="_blank">Facebook</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://www.linkedin.com/company/office-for-national-statistics" class="icon--hide" target="_blank">LinkedIn</a>
-                            </li>
-                            <li class="footer-nav__item">
-                                <a href="https://public.govdelivery.com/accounts/UKONS/subscribers/new" class="icon--hide" target="_blank">Email alerts</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="wrapper">
-
-            <div class="footer-license">
-  <img class="footer-license__img" alt="OGL" width="60" src="https://www.ons.gov.uk/img/ogl.png">
-  <p class="footer-license__text margin-left-sm--0">
-    All content is available under the <a class="icon--hide" href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank">Open Government Licence v3.0</a> <span class="icon icon-external--light-small"></span>, except where otherwise stated
-  </p>
-</div>
-
-
-        </div>
-    </div>
-    <div id="viewport-sm" class="js-viewport-size"></div>
-    <div id="viewport-md" class="js-viewport-size"></div>
-    <div id="viewport-lg" class="js-viewport-size"></div>
-</footer>
+<ONSFooter></ONSFooter>            
