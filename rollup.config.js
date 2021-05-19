@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import dsv from '@rollup/plugin-dsv';
+import json from '@rollup/plugin-json';
 import css from 'rollup-plugin-css-only';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -39,6 +40,7 @@ export default {
 	},
 	plugins: [
 		dsv(),
+		json(),
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production

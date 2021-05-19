@@ -6,7 +6,6 @@
   import ONSHeader from './ONSHeader.svelte';
   import ONSFooter from './ONSFooter.svelte';
   import Breadcrumbs from './Breadcrumbs.svelte';
-  import DataSection from './DataSection.svelte';
   import TodoSections from './TodoSections.svelte';
   import AreasWithinSelector from './AreasWithinSelector.svelte';
   import KeyStats from './KeyStats.svelte';
@@ -44,7 +43,7 @@
   	options.push(option);
   }
   options.sort((a, b) => a.label.localeCompare(b.label, 'en', {ignorePunctuation: true}));
-  let selected = null;
+  let selected = "E09000002";
 
   console.log(selected);
 </script>
@@ -200,9 +199,7 @@
 <section class="wrapper">
     <div>
 
-    <DataSection section={"population"}></DataSection>
-
-    <TodoSections></TodoSections>
+    <TodoSections {place}></TodoSections>
 
 </div>
 </section>

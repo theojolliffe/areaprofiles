@@ -1,0 +1,10 @@
+{
+    "population": {
+        "title": "Resident population",
+        "rows": [
+            {"name": "All usual residents", "var": ["population", "all"], "bold": true, "inChart": false},
+            {"name": "Males", "var": ["population", "male"], "bold": false, "inChart": true},
+            {"name": "Females", "var": ["population", "female"], "bold": false, "inChart": true}
+        ]
+    }
+}
