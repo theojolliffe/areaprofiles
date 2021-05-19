@@ -1,33 +1,63 @@
 <script>
+    import BarChart from './BarChart.svelte';
     import dataSectionConfig from './data-section-config.json';
 
 	import { data } from './stores.js';
 	import { regiondata } from './regions.js';
 
+    let colours = ['#a6cee3','#d95f02','#e6ab02'];
+
     export let section;
     export let place;
     let sectionConfig;
     let rows;
+    let chartData;
+    let regionName;
 
     $: {
+        regionName = $regiondata[place.code].RGN18NM;
         console.log('place');
         console.log(place);
         console.log($regiondata);
         console.log(dataSectionConfig[section]);
         sectionConfig = dataSectionConfig[section];
         rows = [...sectionConfig.rows];
+        let regionSumAll = {"2001": -1, "2011": -1};
         rows.forEach(row => {
             let regionCode = $regiondata[place.code].RGN18CD;
             console.log(regionCode);
             row.val = place.data[row.var[0]].val.c2011[row.var[1]];
-            row.regionSum = 0;
+            row.regionSum = {"2001": 0, "2011": 0};
             Object.values($data).forEach(d => {
                 if ($regiondata[d.code].RGN18CD === regionCode) {
-                    row.regionSum += d.data[row.var[0]].val.c2011[row.var[1]];
+                    for (let year of ["2001", "2011"]) {
+                        row.regionSum[year] += d.data[row.var[0]].val["c"+year][row.var[1]];
+                    }
                 }
             });
+            if (row.var[1] === "all") {
+                regionSumAll = row.regionSum;
+            }
+        });
+        rows.forEach(row => {
+            row.regionPct = {"2001": row.regionSum["2001"] / regionSumAll["2001"] * 100, "2011": row.regionSum["2011"] / regionSumAll["2011"] * 100};
         });
         console.log(rows);
+        chartData = [];
+        for (let row of rows) {
+            if (!row.inChart) continue;
+            chartData.push({variable: row.name, year: 2001, place: place.name, value: place.data[row.var[0]].perc.c2001[row.var[1]]});
+            chartData.push({variable: row.name, year: 2011, place: place.name, value: place.data[row.var[0]].perc.c2011[row.var[1]]});
+            chartData.push({variable: row.name, year: 2001, place: regionName, value: row.regionPct["2001"]});
+            chartData.push({variable: row.name, year: 2011, place: regionName, value: row.regionPct["2011"]});
+        }
+        chartData = {
+            data: chartData,
+            groups: rows.filter(d => d.inChart).map(d => d.name),
+            items: [place.name, regionName],
+            colours: colours
+        };
+        console.log(chartData);
     }
 </script>
 
@@ -60,5 +90,7 @@
             {/if}
         </tbody>
     </table>
+
+    <BarChart {chartData}></BarChart>
     <a href="#" class="text-base">Download this dataset</a>
 </div>
