@@ -1,5 +1,6 @@
 <script>
     import BarChart from './BarChart.svelte';
+    import Multiline from './svelte-components/Multiline.svelte';
     import dataSectionConfig from './data-section-config.json';
 
 	import { data } from './stores.js';
@@ -55,6 +56,7 @@
             data: chartData,
             groups: rows.filter(d => d.inChart).map(d => d.name),
             items: [place.name, regionName],
+            years: [2001, 2011],
             colours: colours
         };
         console.log(chartData);
@@ -92,5 +94,8 @@
     </table>
 
     <BarChart {chartData}></BarChart>
+    <div style="width:600px; height:300px">
+        <Multiline {chartData}></Multiline>
+    </div>
     <a href="#" class="text-base">Download this dataset</a>
 </div>
