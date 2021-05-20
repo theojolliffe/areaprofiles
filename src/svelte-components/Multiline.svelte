@@ -10,15 +10,14 @@
   import Labels from './multiline-components/Labels.svelte';
   import SharedTooltip from './multiline-components/SharedTooltip.svelte';
 
-//  // This example loads csv data as json using @rollup/plugin-dsv
-//  import data from './tmp-data/fruit.csv';
+  const parseDate = timeParse('%Y');
 
   export let chartData;
   let data, seriesNames, dataLong;
 
   function getData() {
       data = chartData.years.map(year => {
-          let result = {year};
+          let result = {year: ''+year};
           chartData.data.forEach(d => {
               if (d.place === chartData.items[0] && d.year === year) {
                   result[d.variable] = d.value;
@@ -57,7 +56,6 @@
   const zKey = 'key';
 
   const seriesColors = ['#ffe4b8', '#ffb3c0', '#ff7ac7', '#ff00cc'];
-  const parseDate = timeParse('%Y');
 
   // Make a flat array of the `values` of our nested series
   // we can pluck the `value` field from each item in the array to measure extents
