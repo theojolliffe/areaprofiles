@@ -55,8 +55,6 @@
   const yKey = 'value';
   const zKey = 'key';
 
-  const seriesColors = ['#ffe4b8', '#ffb3c0', '#ff7ac7', '#ff00cc'];
-
   // Make a flat array of the `values` of our nested series
   // we can pluck the `value` field from each item in the array to measure extents
   const flatten = data => data.reduce((memo, group) => {
@@ -90,7 +88,7 @@
     yDomain={[null, null]}
     zScale={scaleOrdinal()}
     zDomain={seriesNames}
-    zRange={seriesColors}
+    zRange={chartData.lineChartColours}
     flatData={flatten(dataLong)}
     data={dataLong}
   >

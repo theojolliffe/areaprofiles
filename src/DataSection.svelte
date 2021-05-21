@@ -1,4 +1,5 @@
 <script>
+    import { formatUnicorn } from './robo_utils_pure_functions.js';
     import BarChart from './BarChart.svelte';
     import Multiline from './svelte-components/Multiline.svelte';
     import dataSectionConfig from './data-section-config.json';
@@ -6,7 +7,8 @@
 	import { data } from './stores.js';
 	import { regiondata } from './regions.js';
 
-    let colours = ['#a6cee3','#d95f02','#e6ab02'];
+    let colours = ['#27A0CC', '#F66068'];
+    let lineChartColours = ['#206095', '#27A0CC', '#871A5B', '#A8BD3A', '#F66068'];
 
     export let section;
     export let place;
@@ -52,18 +54,30 @@
             chartData.push({variable: row.name, year: 2001, place: regionName, value: row.regionPct["2001"]});
             chartData.push({variable: row.name, year: 2011, place: regionName, value: row.regionPct["2011"]});
         }
+        let roboData = {name: place.name};
+        rows.filter(row => row.hasOwnProperty("roboName"))
+            .forEach(row => {
+                roboData[row.roboName + 2001] = place.data[row.var[0]].val.c2001[row.var[1]].toLocaleString();
+                roboData[row.roboName + 2011] = place.data[row.var[0]].val.c2011[row.var[1]].toLocaleString();
+            });
         chartData = {
             data: chartData,
             groups: rows.filter(d => d.inChart).map(d => d.name),
             items: [place.name, regionName],
             years: [2001, 2011],
-            colours: colours
+            colours: colours,
+            lineChartColours: lineChartColours,
+            roboData
         };
         console.log(chartData);
+        console.log({chartData});
     }
 </script>
 
 <div class="mb-8">
+    <p>
+        {formatUnicorn(sectionConfig.roboString, chartData.roboData)}
+    </p>
     <table class="mb-4 border-b-2 table-auto text-base leading-loose">
         <thead class="border-grey1 border-b-2">
             <tr>

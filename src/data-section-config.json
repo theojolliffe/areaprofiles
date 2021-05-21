@@ -1,8 +1,9 @@
 {
     "population": {
         "title": "Resident population",
+        "roboString": "The population of {name} was {population2001} in 2001 and {population2011} in 2011.",
         "rows": [
-            {"name": "All usual residents", "var": ["population", "all"], "bold": true, "inChart": false},
+            {"name": "All usual residents", "var": ["population", "all"], "bold": true, "inChart": false, "roboName": "population"},
             {"name": "Males", "var": ["population", "male"], "bold": false, "inChart": true},
             {"name": "Females", "var": ["population", "female"], "bold": false, "inChart": true}
         ]
