@@ -3,9 +3,18 @@
         "title": "Resident population",
         "roboString": "The population of {name} was {population2001} in 2001 and {population2011} in 2011.",
         "rows": [
-            {"name": "All usual residents", "var": ["population", "all"], "bold": true, "inChart": false, "roboName": "population"},
+            {"name": "All usual residents", "var": ["population", "all"], "bold": true, "inChart": false, "roboName": "population", "excludeFromTotal": true},
             {"name": "Males", "var": ["population", "male"], "bold": false, "inChart": true},
             {"name": "Females", "var": ["population", "female"], "bold": false, "inChart": true}
+        ]
+    },
+    "age": {
+        "title": "Age structure",
+        "roboString": "{name} had {a1664_2001} people aged 16-64 in 2001 and {a1664_2011} in 2011.",
+        "rows": [
+            {"name": "0-15", "var": ["age", "a015"], "bold": false, "inChart": true},
+            {"name": "16-64", "var": ["age", "a1664"], "bold": false, "inChart": true, "roboName": "a1664_"},
+            {"name": "65 and over", "var": ["age", "a65plus"], "bold": false, "inChart": true}
         ]
     }
 }

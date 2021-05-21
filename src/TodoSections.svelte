@@ -14,6 +14,7 @@
     </header>
 
     <DataSection section={"population"} {place}></DataSection>
+    <DataSection section={"age"} {place}></DataSection>
 
     <div class="mb-8">
         <table class="mb-4 border-b-2 table-auto text-base leading-loose">

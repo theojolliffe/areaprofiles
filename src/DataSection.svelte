@@ -19,33 +19,27 @@
 
     $: {
         regionName = $regiondata[place.code].RGN18NM;
-        console.log('place');
-        console.log(place);
-        console.log($regiondata);
-        console.log(dataSectionConfig[section]);
         sectionConfig = dataSectionConfig[section];
         rows = [...sectionConfig.rows];
-        let regionSumAll = {"2001": -1, "2011": -1};
+        let regionSumAll = {"2001": 0, "2011": 0};
         rows.forEach(row => {
             let regionCode = $regiondata[place.code].RGN18CD;
-            console.log(regionCode);
             row.val = place.data[row.var[0]].val.c2011[row.var[1]];
             row.regionSum = {"2001": 0, "2011": 0};
             Object.values($data).forEach(d => {
                 if ($regiondata[d.code].RGN18CD === regionCode) {
                     for (let year of ["2001", "2011"]) {
                         row.regionSum[year] += d.data[row.var[0]].val["c"+year][row.var[1]];
+                        if (!row.excludeFromTotal) {
+                            regionSumAll[year] += d.data[row.var[0]].val["c"+year][row.var[1]];
+                        }
                     }
                 }
             });
-            if (row.var[1] === "all") {
-                regionSumAll = row.regionSum;
-            }
         });
         rows.forEach(row => {
             row.regionPct = {"2001": row.regionSum["2001"] / regionSumAll["2001"] * 100, "2011": row.regionSum["2011"] / regionSumAll["2011"] * 100};
         });
-        console.log(rows);
         chartData = [];
         for (let row of rows) {
             if (!row.inChart) continue;
@@ -70,10 +64,11 @@
             roboData
         };
         console.log(chartData);
-        console.log({chartData});
     }
 </script>
 
+<!-- FIXME why isn't h3 styling working? -->
+<h3 class="padding-top--4 padding-bottom--2" style="font-weight: bold; font-size: 150%">{sectionConfig.title}</h3>
 <div class="mb-8">
     <p>
         {formatUnicorn(sectionConfig.roboString, chartData.roboData)}
