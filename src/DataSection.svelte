@@ -107,9 +107,15 @@
         </tbody>
     </table>
 
-    <BarChart {chartData}></BarChart>
-    <div style="width:600px; height:300px">
-        <Multiline {chartData}></Multiline>
+    <div class="wrapper padding-top--5 padding-bottom--5">
+        <div class="col-wrap" style="height: 300px">
+            <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">
+                <BarChart {chartData}></BarChart>
+            </div>
+            <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">
+                <Multiline {chartData}></Multiline>
+            </div>
+        </div>
     </div>
     <a href="#" class="text-base">Download this dataset</a>
 </div>

@@ -13,35 +13,33 @@
   const xMaxFn = data => Math.max(...data.data.map(d => d.value));
 </script>
 
-<div style="width:600px; height: 300px">
-    <LayerCake
-      padding={{ top: 0, bottom: 20, left: 100 }}
-      x={null}
-      y="key"
-      yScale={scaleBand().paddingInner([0.05]).round(true)}
-      yDomain={chartData.groups}
-      yRange={ ({ width, height }) => [height,height*.1] }
-      xDomain={[0, 100]}
-      data={chartData}
-    >
-      <Svg>
-        <AxisX
-          gridlines={true}
-          baseline={true}
-          snapTicks={false}
-          ticks=4
-        />
-        <AxisY
-          gridlines={false}
-        />
-        <BarWithReferenceLines/>
-      </Svg>
-      <Html pointerEvents={false}>
-        <Key
-          align='end'
-          shape='square'
-          showReferenceLines={true}
-        />
-      </Html>
-    </LayerCake>
-</div>
+<LayerCake
+  padding={{ top: 0, bottom: 20, left: 100 }}
+  x={null}
+  y="key"
+  yScale={scaleBand().paddingInner([0.05]).round(true)}
+  yDomain={chartData.groups}
+  yRange={ ({ width, height }) => [height,height*.1] }
+  xDomain={[0, 100]}
+  data={chartData}
+>
+  <Svg>
+    <AxisX
+      gridlines={true}
+      baseline={true}
+      snapTicks={false}
+      ticks=4
+    />
+    <AxisY
+      gridlines={false}
+    />
+    <BarWithReferenceLines/>
+  </Svg>
+  <Html pointerEvents={false}>
+    <Key
+      align='end'
+      shape='square'
+      showReferenceLines={true}
+    />
+  </Html>
+</LayerCake>
