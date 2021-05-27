@@ -13,15 +13,15 @@
 	 * Put the label on the highest value
 	 */
   $: left = values => $xScale(max(values, $x)) /  Math.max(...$xRange);
-  $: top = values => $yScale(max(values, $y)) / Math.max(...$yRange);
+  $: top = values => $yScale(values[values.length-1].value) / Math.max(...$yRange);
 </script>
 
 {#each $data as group}
 	<div
     class="label"
     style="
-      top:{top(group.values) * 100}%;
-      left:{left(group.values) * 100}%;
+      top:{top(group.values) * 100 + 3}%;
+      left:{left(group.values) * 100 + 20}%;
     "
   >{cap(group.key)}</div>
 {/each}
