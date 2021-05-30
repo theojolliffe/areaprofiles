@@ -2,6 +2,14 @@
 	export let options, selected, message;
 </script>
 
+<style>
+	select {
+		border: none;
+		font-weight: bold;
+		font-size: 1.4em;
+	}
+	</style>
+	
 {#if options[0]}
 <p>
 	<select bind:value={selected}>

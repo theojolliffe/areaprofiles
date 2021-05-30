@@ -1,30 +1,59 @@
 <script>
-export let keyStats;
-
-let keyStatsText;
-
-$: keyStatsText = [
-    {title: "Resident population as of 2021", val: keyStats.population},
-    {title: "Population increase since 2011", val: keyStats.popIncrease},
-    {title: "Total area size (Hectares)", val: keyStats.sizeHectares},
-    {title: "Population density (People per hectare)", val: keyStats.popDensity}
-];
- 
-</script>
-<section id="key-stats">
-    <div class="wrapper">
-        <header>
-            <h2 class="text-md font-bold mb-4">Key statistics</h2>
-        </header>
-        <div class="mb-8">
-            <ul class="list-none divide-y divide-grey3 md:flex md:divide-y-0 md:divide-x md:-ml-4">
-                    {#each keyStatsText as item}
-                        <li class="p-0 pt-2 mb-2 md:m-0 md:mb-2 md:px-4">
-                            <h3 class="text-base font-normal md:mb-2">{item.title}</h3>
-                            <div class="text-lg font-bold">{item.val}</div>
-                        </li>
+    export let keyStats;
+    
+    let keyStatsText;
+    
+    $: keyStatsText = [
+        {title: "Population", val: keyStats.population},
+        {title: "hectares", val: keyStats.sizeHectares},
+        {title: "people per hectare", val: keyStats.popDensity}
+    ];
+     
+    </script>
+    <style>
+    .wrapper.stats {
+        width: auto;
+    }
+    .column-half {
+        width: 46%;
+        float: left;
+        margin: 0 0 0 0;
+    }
+    .stat-list {
+        height: 34px;
+        display: block;
+    }
+    section#key-stats {
+        padding-left: 5px;
+    }
+    </style>
+    <section id="key-stats">
+    
+        <div class="column-half">
+            <div class="wrapper stats">
+                <div class="mb-8">
+                    {#each keyStatsText.slice(0,1) as item}
+                        <span class="stat-list">
+                                <span class="text-md" style="display: block;">{item.title}</span>
+                                <span class="text-lg font-bold" style="display: block;">{item.val}</span>
+                        </span>
                     {/each}
-            </ul>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
+    
+        <div class="column-half">
+            <div class="wrapper stats">
+                <div class="mb-8">
+                    {#each keyStatsText.slice(1,3) as item}
+                        <span class="stat-list">
+                            <span class="text-md font-bold" style="float: left;">{item.val} &nbsp</span>
+                            <span class="text-sm">{item.title}</span>
+                        </span>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    
+    </section>
+    
