@@ -21,9 +21,8 @@
         "title": "Average age",
         "roboString": "{name} had {a1664_2001} people aged 16-64 in 2001 and {a1664_2011} in 2011.",
         "rows": [
-            {"name": "0-15", "var": ["age", "a015"], "bold": false, "inChart": true},
-            {"name": "16-64", "var": ["age", "a1664"], "bold": false, "inChart": true, "roboName": "a1664_"},
-            {"name": "65 and over", "var": ["age", "a65plus"], "bold": false, "inChart": true}
+            {"name": "2001", "var": ["medage", "2001"], "bold": false, "inChart": true},
+            {"name": "2011", "var": ["medage", "2011"], "bold": false, "inChart": true, "roboName": "a1664_"}
         ]
     },
     "economic": {

@@ -29,11 +29,6 @@
         [xKey]: d[xKey]
       }
     })
-
-    console.log("BS, data", data)
-    console.log("BS, dataTrans", dataTransformed)
-    console.log("BS, age data", ageData)
-
   
   </script>
   
