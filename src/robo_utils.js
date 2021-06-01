@@ -43,6 +43,7 @@ function countryify(code, pNum, place, _data, countryRank, label) {
             return a.sqr - b.sqr;
     }); 
 
+
     let rank = ranks[pNum];
     label[0] = rank.label;
 
@@ -75,7 +76,7 @@ function countryify2(code, param, pNum, countryRank) {
   });
 }
 
-function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regionRank, countryRank, label) {
+function regionify(code, pNum, pNumC, oddNumberedPara, place, _data, _regiondata, regionRank, countryRank, label) {
   // Get data of places with same region
   let placeregion = _regiondata[code];
   let result = {}
@@ -113,8 +114,8 @@ function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regio
       return a.sqr - b.sqr;
   }); 
 
-	// THIS NEEDS TO BE REVISITED. LOOK AT SLOUGH. DOESN'T TRIGGER REGION RANK WHEN HIGHER THAN NATIONAL BECAUSE OF INDEXING ISSUE
-	if (regionRank[pNum]['sqr']<countryRank[pNum]['sqr']){
+	// THIS NEEDS TO BE REVISITED. LOOK AT SLOUGH. DOESN'T TRIGGER REGION RANK WHEN HIGHER THAN NATIONAL BECAUSE OF INDEXING ISSUE --> THIS HAS BEEN REVISED 
+	if (regionRank[pNum]['sqr']<countryRank[pNumC]['sqr']){
 		label[0] = ranks[pNum].label
 	}
   
@@ -131,7 +132,63 @@ function regionify(code, pNum, oddNumberedPara, place, _data, _regiondata, regio
       londonOrWales: "{regionName}" == "London" | "{regionName}" == "Wales"
   });
 }
-	
+
+// Duplicated and modified the regionify function because the function had to be called early in paragraphify in order to creat the region rankings, but this version doesn't alter other variables
+function regionifyRANK(code, pNum, pNumC, oddNumberedPara, place, _data, _regiondata, regionRank, countryRank, label) {
+    // Get data of places with same region
+    let placeregion = _regiondata[code];
+    let result = {}
+    for (let key in _regiondata) {
+        if (_regiondata[key]['RGN18CD'] == placeregion["RGN18CD"]) {
+           result[key] = _data[key];
+        }
+    }
+    
+    // FINDS RANK OF VARIABLE INPUT 
+    regionRank.length = 0;
+    let ranks = regionRank; 
+    function compVariable(a, b, c, d) {
+      let vari = place['data'][a][b][c][d];
+      let array = []
+      for (let key in result) {
+        array.push(result[key]['data'][a][b][c][d]);
+      }
+      array.sort(function(a, b){return b-a});
+      let varRank = array.indexOf(vari) + 1 
+      // If rank is in the bottom half assign negative value
+      if (varRank > array.length/2) {
+        varRank = varRank-array.length-1
+      }
+      ranks.push({'label': a+"_"+b+"_"+c+"_"+d, 'value': varRank, 'sqr': Math.pow(varRank, 2), 'sqrt': Math.sqrt(Math.pow(varRank, 2)), 'abVal': place['data'][a][b][c][d]}); 
+    }
+    
+    for (let key in regionifyRoboStrings) {
+      if (regionifyRoboStrings.hasOwnProperty(key)) {
+          compVariable(...key.split("_"));
+      }
+    }
+  
+    ranks.sort(function(a, b) {
+        return a.sqr - b.sqr;
+    }); 
+
+    // Deleted the element that changes the label
+    
+    return formatUnicorn(regionifyRoboStrings[ranks[pNum].label], {
+        ordinalSuffix: ordinal_suffix_of(ranks[pNum].sqrt),
+        rankIsNegative: ranks[pNum].value < 0,
+        incDec: (ranks[pNum].value < 0) ? ((ranks[pNum].abVal < 0) ? "greatest decrease" : "smallest increase") : (ranks[pNum].abVal > 0) ? "greatest increase" : "smallest decrease",
+        abVal: ranks[pNum].abVal.toLocaleString(),
+        abValPctChange: ((ranks[pNum].abVal>0)?"+":"") + ranks[pNum].abVal + "%",
+        ladName: placeregion["LAD18NM"],
+        regionName: placeregion["RGN18NM"],
+        firstPara: pNum == 1,
+        oddNumberedPara: oddNumberedPara,
+        londonOrWales: "{regionName}" == "London" | "{regionName}" == "Wales"
+    });
+  }
+
+  
 function getHeadline(place, total, breaks) {
     let content = [
         {
@@ -203,18 +260,24 @@ function thirdSen(param, pNum, paramArray, place, breaks) {
     placeName: place.name,
     valIsNegative: val < 0
   });
-}
+};
 
 /////////// PARAGRAPH ////////////
 function paragraphify(place, numParagraphs, _data, _regiondata, countryRank, label, breaks) {
     const code = place.code;
-    let rankToSkip = 0;
+    // Seperate variables needed to calculate the paragraph number for country and region
+    let rankToSkipC = 0;
+    let rankToSkipR = 0;
+    // Create an array to fill with topics that have been covered so every section is a new topic
+    let covered = [];
     let paragraphs = [];
+    let topics = [];
+
     for (let pNum=0; pNum<numParagraphs; pNum++) {
         // TODO: get regionRank in a nicer way
         var regionRank = [];
-        let senCountry = countryify(code, pNum+rankToSkip, place, _data, countryRank, label)
-        let senRegion = regionify(code, pNum+rankToSkip, pNum % 2 == 1, place, _data, _regiondata, regionRank, countryRank, label)
+        let senCountry = countryify(code, rankToSkipC, place, _data, countryRank, label)
+        let senRegion = regionifyRANK(code, rankToSkipR, rankToSkipC, pNum % 2 == 1, place, _data, _regiondata, regionRank, countryRank, label)
         let sen3;
         let sen3param;
         let para;
@@ -222,48 +285,68 @@ function paragraphify(place, numParagraphs, _data, _regiondata, countryRank, lab
         // IS SENTENCE CURRENT TOTAL OR 10 YEAR CHANGE
         // var senTopic = regionRank[pNum+rankToSkip]['label']
         var changeTot = label[0].split("_")
-        // IS NEXT SENTENCE SAME TOPIC AS FIRST
-        var senTopicNext = regionRank[pNum+rankToSkip+1]['label']
-        var senTopicNextCountry = countryRank[pNum+rankToSkip+1]['label']
-        var changeTotNext = senTopicNext.split("_")
-        var changeTotNextCountry = senTopicNextCountry.split("_")
-        // SKIP NEXT SENTENCE IF SAME TOPIC AS FIRST
-        if (changeTot[0]+changeTot[1]+changeTot[3] == changeTotNext[0]+changeTotNext[1]+changeTotNext[3]) {
-            rankToSkip = rankToSkip+1
-        }
-        // SKIP NEXT SENTENCE IF SAME TOPIC AS FIRST COUNTRIFIED
-        if (changeTot[0]+changeTot[1]+changeTot[3] == changeTotNextCountry[0]+changeTotNextCountry[1]+changeTotNextCountry[3]) {
-            rankToSkip = rankToSkip+1
-        }
+        // Push this topic to array of covered topics
+        covered.push(changeTot[0])
+
+        // Find the index at which region rank matches current label from country rank
+        var index = regionRank.findIndex(function(regRank) {
+            return regRank.label == label[0]
+        });
         
         // REGIONAL RANK IS HIGHER THAN NATIONAL:
-        if (regionRank[pNum]['sqr']<countryRank[pNum]['sqr']){
+        if (regionRank[index]['sqr']<countryRank[rankToSkipC]['sqr']){
             if (changeTot[2] == "change") {
                 sen3param = changeTot[0] + "_" + changeTot[1] + "_" +  "c2011" + "_" + changeTot[3]
             } else if (changeTot[2] == "c2011") {
                 sen3param = changeTot[0] + "_" + changeTot[1] + "_" +  "change" + "_" + changeTot[3]
             }
-            sen3 = thirdSen(sen3param, pNum, changeTot, place, breaks)
-            para = senRegion + countryify2(code, label[0], pNum+rankToSkip, countryRank) + sen3
+            sen3 = thirdSen(sen3param, rankToSkipR, changeTot, place, breaks)
+            para = regionify(code, index, rankToSkipR, pNum % 2 == 1, place, _data, _regiondata, regionRank, countryRank, label) + countryify2(code, label[0], rankToSkipC, countryRank) + sen3
         }
         // IF NATIONAL RANK IS EQUAL
-        else if (regionRank[pNum]['sqr']==countryRank[pNum]['sqr']) {
+        else if (regionRank[index]['sqr']==countryRank[rankToSkipC]['sqr']) {
             if (changeTot[2] == "change") {
                 sen3param = changeTot[0] + "_" + changeTot[1] + "_" +  "c2011" + "_" + changeTot[3]
             } else if (changeTot[2] == "c2011") {
                 sen3param = changeTot[0] + "_" + changeTot[1] + "_" +  "change" + "_" + changeTot[3]
             }
-            sen3 = thirdSen(sen3param, pNum, changeTot, place, breaks)
+            sen3 = thirdSen(sen3param, rankToSkipC, changeTot, place, breaks)
             para = senCountry + sen3
         }
-        if (pNum == 3) {
+        if (pNum == 1) {
             console.log("COUNTRY RANK", countryRank)
             console.log("REGION RANK", regionRank)
         }
+
+        // HAS TOPIC ALREADY BEEN COVERED? REGIONIFIED
+        var i;
+        for (i = 1; i < regionRank.length; i++) {
+            var senTopicNext = regionRank[i]['label']
+            var changeTotNext = senTopicNext.split("_")
+
+            if (!covered.includes(changeTotNext[0])) {
+                rankToSkipR = i
+                break
+            }
+        }
+
+        // HAS TOPIC ALREADY BEEN COVERED? COUNTRYFIED
+        for (i = 1; i < countryRank.length; i++) {
+            var senTopicNextCountry = countryRank[i]['label']
+            var changeTotNextCountry = senTopicNextCountry.split("_")
+
+            if (!covered.includes(changeTotNextCountry[0])) {
+                rankToSkipC = i
+                break
+            }
+        }
+        
+
         paragraphs.push(para);
+        topics.push(changeTot)
     }
     
-    return paragraphs;
+    return {"paragraphs": paragraphs, "topic": topics};
 }
 
 export { getHeadline, paragraphify };

@@ -1,12 +1,12 @@
 <script>
+	import { sectionify } from './sectionify.js';
 	import { getHeadline, paragraphify } from './robo_utils.js';
 	import { adjectify, plusminus, ordinal_suffix_of } from './robo_utils_pure_functions.js';
 	import Select from './Select.svelte';
 	import { data, metadata } from './stores.js';
 	import { regiondata } from './regions.js';
-	
-	console.log($data) 
-	
+	import DataSection2 from './DataSection2.svelte';
+		
 	var countryRank = [];
 	
 	export let options;
@@ -27,14 +27,14 @@
 </style>
 
 {#if selected != null}
-<h1 style="color:red">This is a prototype using old data, and might not be accurate</h1>
-<h2>{getHeadline(place, total, breaks).headline}</h2>
-<p>
-	<strong>{getHeadline(place, total, breaks).subhead}</strong>
-</p>
-{#each paragraphify(place, 4, $data, $regiondata, countryRank, label, breaks) as paragraph}
-<p>{paragraph}</p>
+<header style="margin-top: 100px; margin-bottom: 30px;">
+	<h2 class="text-2xl font-bold">{getHeadline(place, total, breaks).headline}</h2>
+</header>
+
+{#each sectionify(place, 8, $data, $regiondata, countryRank, label, breaks) as sect}
+<DataSection2 section={sect["section"][0]} parag={sect["parag"]} {place}></DataSection2>
 {/each}
+
 {:else}
 <p>
 	This demo illustrates different ways of presenting local authority level data from the 2011 Census and how it changed from 2001, making use of robo-journalism and automation techniques.

@@ -24,7 +24,7 @@
   $: {
       place = $data[selected];
       if (place) {
-          console.log(place);
+          console.log("place", place);
           keyStats = {
               population: place.data.population.val.c2011.all.toLocaleString(),
               popIncrease: Math.floor(place.data.population.val.change.all * place.data.population.val.c2001.all / 100).toLocaleString(),
@@ -44,8 +44,6 @@
   }
   options.sort((a, b) => a.label.localeCompare(b.label, 'en', {ignorePunctuation: true}));
   let selected = "E09000002";
-
-  console.log(selected);
 </script>
 
 <style>
@@ -126,12 +124,12 @@ img {
     </div>
 </div>
 
-<section class="wrapper">
-    <div>
+    <section class="wrapper">
+        <div>
 
-    <TodoSections {place}></TodoSections>
-
-</div>
-</section>
+            <Profile {options} {selected} {place}></Profile>
+            
+        </div>
+    </section>
 
 <ONSFooter></ONSFooter>            
