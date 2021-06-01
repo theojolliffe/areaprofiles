@@ -61,3 +61,9 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+body > section > div > div > div > div > div > div > div > svg > g > g.axis.x-axis > g.tick > text {
+	transform: rotate(-60deg)!important;
+	text-anchor: end !important;
+  }
+  

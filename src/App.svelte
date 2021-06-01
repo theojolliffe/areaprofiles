@@ -96,7 +96,6 @@ img {
     max-width: fit-content;
 }
 </style>
-
 <PrototypeWarning></PrototypeWarning>
 <ONSHeader></ONSHeader>
 <PrototypeWarning></PrototypeWarning>

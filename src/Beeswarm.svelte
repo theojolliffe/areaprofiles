@@ -1,26 +1,20 @@
 <script>
-    export let ageData;
+    export let singleData;
 
     import { LayerCake, Svg, Html } from 'layercake';
-    import { scaleOrdinal } from 'd3-scale';
+    import { scaleOrdinal, scaleLog } from 'd3-scale';
   
     import Key from './svelte-components/beeswarm-components/Key.svelte';
     import AxisX from './svelte-components/beeswarm-components/AxisX.svelte';
     import Beeswarm from './svelte-components/beeswarm-components/BeeswarmForce.svelte';
-  
-    // This example loads csv data as json using @rollup/plugin-dsv
-    import data from './data/us-senate.csv';
-  
-    const xKey = 'age';
+    
+    const xKey = 'value';
     const zKey = 'place';
-    const titleKey = 'name';
-  
-    const r = 6;
-  
+    const titleKey = 'name';  
     const seriesNames = new Set();
-    const seriesColors = ['#BFBFBF', '#000', '#2AA0CC'];
+    const seriesColors = ['#BFBFBF', '#2AA0CC', '#000'];
   
-    const dataTransformed = ageData.map(d => {
+    const dataTransformed = singleData.map(d => {
       seriesNames.add(d[zKey]);
   
       return {
@@ -49,11 +43,12 @@
     <LayerCake
       padding={{bottom: 15}}
       x={xKey}
+      xScale = {scaleLog()}
       z={zKey}
       zScale={scaleOrdinal()}
       zDomain={Array.from(seriesNames)}
       zRange={seriesColors}
-      data={ageData}
+      data={singleData}
       custom={{
         getTitle: d => d[titleKey]
       }}
@@ -63,7 +58,6 @@
       <Svg>
         <AxisX/>
         <Beeswarm
-          r={width < 400 ? r / 1.25 : r}
           strokeWidth={1}
           xStrength={0.95}
           yStrength={0.075}

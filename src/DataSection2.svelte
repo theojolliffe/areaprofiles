@@ -18,7 +18,9 @@
     let rows;
     let chartData;
     let regionName;
-    let ageData;
+    let singleData;
+    let singleCat = ["medage", "density", "population"];
+    let singleCatSelect = {"medage": "median", "density": "density", "population": "all"};
 
 
     $: {
@@ -46,7 +48,7 @@
             row.regionPct = {"2001": row.regionSum["2001"] / regionSumAll["2001"] * 100, "2011": row.regionSum["2011"] / regionSumAll["2011"] * 100};
         });
         chartData = [];
-        if (sectionConfig.title != "Average age") {
+        if (!singleCat.includes(section)) {
             for (let row of rows) {
                 if (!row.inChart) continue;
                 chartData.push({variable: row.name, year: 2001, place: place.name, value: place.data[row.var[0]].perc.c2001[row.var[1]]});
@@ -77,22 +79,22 @@
                 chartData.push({variable: row.var[1], year: row.var[1], place: place.name, value: place.data[row.var[0]].val["c"+row.var[1]].median});
             }
         }
-        ageData = [];
+        console.log("sectionConfig", section)
+        singleData = [];
         for (const i in $data) {
-            let ageLoc = {};
-            ageLoc.age = $data[i].data.medage.val.c2011.median;;
-            ageLoc.placeName = $data[i].name;
-            ageLoc.code = $data[i].code;
+            let singleLoc = {};
+            singleLoc.value = $data[i].data[section].val.c2011[singleCatSelect[section]];
+            singleLoc.placeName = $data[i].name;
             if ($data[i].name == place.name) {
-                ageLoc.place = place.name;
+                singleLoc.place = place.name;
             }
             else if ($regiondata[place.code].RGN18NM == $regiondata[$data[i].code].RGN18NM) {
-                ageLoc.place = $regiondata[$data[i].code].RGN18NM;
+                singleLoc.place = $regiondata[$data[i].code].RGN18NM;
             }
             else if ($regiondata[place.code].RGN18NM != $regiondata[$data[i].code].RGN18NM) {
-                ageLoc.place = "UK";
+                singleLoc.place = "UK";
             };
-            ageData.push(ageLoc);
+            singleData.push(singleLoc);
         }
         console.log("chart data", chartData)
 
@@ -108,9 +110,9 @@
 
     <div class="wrapper padding-top--5 padding-bottom--5">
         <div class="col-wrap" style="height: 300px">
-            {#if sectionConfig.title == "Average age" | sectionConfig.title == "Population density"}
+            {#if singleCat.includes(section)}
                 <div class="col col--lg-full padding-left--7 padding-right--7" style="height: 300px">
-                    <Beeswarm {ageData}></Beeswarm>
+                    <Beeswarm {singleData}></Beeswarm>
                 </div>
             {:else}
                 <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">
@@ -123,13 +125,7 @@
         </div>
     </div>
 
-    {#if sectionConfig.title == "Population density"}
-
-        <p>
-            insert table here
-        </p>
-
-    {:else if sectionConfig.title == "Average age"}
+    {#if singleCat.includes(section)}
 
         <table class="mb-4 border-b-2 table-auto text-base leading-loose">
             <thead class="border-grey1 border-b-2">
@@ -145,7 +141,7 @@
                     <tr class="h-9 p-0 border-grey3 border-b">
                         <td class="p-0 td-string">{place.name}</td>
                         {#each rows as row}
-                            <td class="p-0 td-number">{place.data[row.var[0]].val["c"+row.var[1]].median.toLocaleString()}</td>
+                            <td class="p-0 td-number">{place.data[section].val["c"+row.var[1]][singleCatSelect[section]].toLocaleString()}</td>
                         {/each}
                     </tr>
                     

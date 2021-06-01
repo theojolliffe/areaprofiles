@@ -6,7 +6,7 @@
   
     const nodes = $data.map((d) => ({ ...d }));
   
-    export let r = 4;
+    export let r = 6;
     export let xStrength = 0.95;
     export let yStrength = 0.075;
     export let strokeWidth = 1;
@@ -27,6 +27,7 @@
         simulation.tick();
       }
     }
+    console.log("NODES", nodes)
   </script>
   
   <g class='bee-group'>
