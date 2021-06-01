@@ -1,5 +1,5 @@
 <script>
-    export let chartData;
+  export let chartData;
 
   import { LayerCake, Svg, Html } from 'layercake';
   import { scaleBand } from 'd3-scale';

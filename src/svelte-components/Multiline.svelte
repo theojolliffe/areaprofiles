@@ -25,8 +25,6 @@
           });
           return result;
       });
-      console.log(chartData);
-      console.log(data);
       seriesNames = Object.keys(data[0]).filter(d => d !== xKey);
       dataLong = seriesNames.map(key => {
         return {

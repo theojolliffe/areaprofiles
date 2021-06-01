@@ -1,7 +1,7 @@
 <script>
     import { formatUnicorn } from './robo_utils_pure_functions.js';
     import BarChart from './BarChart.svelte';
-    // import Beeswarm from './Beeswarm.svelte'; 
+    import Beeswarm from './Beeswarm.svelte'; 
     import Multiline from './svelte-components/Multiline.svelte';
     import dataSectionConfig from './data-section-config.json';
 
@@ -18,6 +18,8 @@
     let rows;
     let chartData;
     let regionName;
+    let ageData;
+
 
     $: {
         regionName = $regiondata[place.code].RGN18NM;
@@ -65,7 +67,23 @@
             lineChartColours: lineChartColours,
             roboData
         };
-        console.log("Chart data", chartData);
+        ageData = [];
+        for (const i in $data) {
+            let ageLoc = {};
+            ageLoc.age = $data[i].data.medage.val.c2011.median;;
+            ageLoc.placeName = $data[i].name;
+            ageLoc.code = $data[i].code;
+            if ($data[i].name == place.name) {
+                ageLoc.place = place.name;
+            }
+            else if ($regiondata[place.code].RGN18NM == $regiondata[$data[i].code].RGN18NM) {
+                ageLoc.place = $regiondata[$data[i].code].RGN18NM;
+            }
+            else if ($regiondata[place.code].RGN18NM != $regiondata[$data[i].code].RGN18NM) {
+                ageLoc.place = "UK";
+            };
+            ageData.push(ageLoc);
+        }
     }
 </script>
 
@@ -79,9 +97,8 @@
     <div class="wrapper padding-top--5 padding-bottom--5">
         <div class="col-wrap" style="height: 300px">
             {#if sectionConfig.title == "Average age"}
-                <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">
-                    <BarChart {chartData}></BarChart>
-                <!--    <Beeswarm></Beeswarm> -->
+                <div class="col col--lg-full padding-left--7 padding-right--7" style="height: 300px">
+                    <Beeswarm {ageData}></Beeswarm>
                 </div>
             {:else}
                 <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">

@@ -24,7 +24,7 @@
   $: {
       place = $data[selected];
       if (place) {
-          console.log("place", place);
+        console.log("place", place);
           keyStats = {
               population: place.data.population.val.c2011.all.toLocaleString(),
               popIncrease: Math.floor(place.data.population.val.change.all * place.data.population.val.c2001.all / 100).toLocaleString(),

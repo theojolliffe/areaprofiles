@@ -63,7 +63,6 @@
             lineChartColours: lineChartColours,
             roboData
         };
-        console.log(chartData);
     }
 </script>
 
