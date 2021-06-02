@@ -7,7 +7,7 @@
   import MultiLine from './multiline-components/MultiLine.svelte';
   import AxisX from './multiline-components/AxisX.svelte';
   import AxisY from './multiline-components/AxisY.svelte';
-  import Labels from './multiline-components/Labels.svelte';
+  import Labels from './multiline-components/Labels2.svelte';
   import SharedTooltip from './multiline-components/SharedTooltip.svelte';
 
   const parseDate = timeParse('%Y');

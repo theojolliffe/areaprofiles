@@ -102,13 +102,13 @@
 </script>
 
 <!-- FIXME why isn't h3 styling working? -->
-<h3 class="padding-top--4 padding-bottom--2" style="font-weight: bold; font-size: 150%">{sectionConfig.title}</h3>
+<h3 class="padding-top--4 padding-bottom--4" style="font-weight: bold; font-size: 150%">{sectionConfig.title}</h3>
 <div class="mb-8">
     <p>
         {parag}
     </p>
 
-    <div class="wrapper padding-top--5 padding-bottom--5">
+    <div class="wrapper padding-top--10 padding-bottom--10">
         <div class="col-wrap" style="height: 300px">
             {#if singleCat.includes(section)}
                 <div class="col col--lg-full padding-left--7 padding-right--7" style="height: 300px">

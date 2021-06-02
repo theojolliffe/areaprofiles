@@ -125,9 +125,7 @@ img {
 
     <section class="wrapper">
         <div>
-
             <Profile {options} {selected} {place}></Profile>
-            
         </div>
     </section>
 

@@ -6,6 +6,8 @@
 	import { data, metadata } from './stores.js';
 	import { regiondata } from './regions.js';
 	import DataSection2 from './DataSection2.svelte';
+	import Custom from './Custom.svelte';
+
 		
 	var countryRank = [];
 	
@@ -20,7 +22,7 @@
 		breaks.push(Math.round((i * total) / 10));
 	
     // TODO label is just a string in an array.  Do something nicer.
-    let label = [""];
+	let label = [""];	
 </script>
 
 <style>
@@ -32,7 +34,14 @@
 </header>
 
 {#each sectionify(place, 8, $data, $regiondata, countryRank, label, breaks) as sect}
-<DataSection2 section={sect["section"][0]} parag={sect["parag"]} {place}></DataSection2>
+	<DataSection2 section={sect["section"][0]} parag={sect["parag"]} {place}></DataSection2>
+	{#if sect["round"]==0}
+		<section class="wrapper">
+			<div style="margin-top: 50px; margin-bottom: 50px; height: 150px;">
+				<Custom></Custom>
+			</div>
+		</section>
+	{/if}
 {/each}
 
 {:else}
