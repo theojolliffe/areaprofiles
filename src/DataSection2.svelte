@@ -6,7 +6,11 @@
     import dataSectionConfig from './data-section-config.json';
 
 	import { data } from './stores.js';
-	import { regiondata } from './regions.js';
+    import { regiondata } from './regions.js';
+    import AutoComplete from "simple-svelte-autocomplete";
+
+    export let options
+    let comparedPlace;
 
     let colours = ['#27A0CC', '#F66068'];
     let lineChartColours = ['#206095', '#27A0CC', '#871A5B', '#A8BD3A', '#F66068'];
@@ -101,6 +105,17 @@
     }
 </script>
 
+<style>
+    div#search-compare {
+        width: 30%;
+        height: 40%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 40%;
+        margin-bottom: 40%;
+    }
+</style>
+
 <!-- FIXME why isn't h3 styling working? -->
 <h3 class="padding-top--4 padding-bottom--4" style="font-weight: bold; font-size: 150%">{sectionConfig.title}</h3>
 <div class="mb-8">
@@ -108,7 +123,7 @@
         {parag}
     </p>
 
-    <div class="wrapper padding-top--10 padding-bottom--10">
+    <div class="wrapper padding-top--10 padding-bottom--20">
         <div class="col-wrap" style="height: 300px">
             {#if singleCat.includes(section)}
                 <div class="col col--lg-full padding-left--7 padding-right--7" style="height: 300px">
@@ -120,6 +135,9 @@
                 </div>
                 <div class="col col--md-half col--lg-half padding-left--1 padding-right--1" style="height: 300px">
                     <Multiline {chartData}></Multiline>
+                </div>
+                <div id="search-compare">
+                    <AutoComplete items={options} bind:selectedItem={comparedPlace} labelFunction={option => option.label} placeholder="Compare with..."/>
                 </div>
             {/if}
         </div>

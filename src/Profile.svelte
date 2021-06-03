@@ -34,11 +34,11 @@
 </header>
 
 {#each sectionify(place, 8, $data, $regiondata, countryRank, label, breaks) as sect}
-	<DataSection2 section={sect["section"][0]} parag={sect["parag"]} {place}></DataSection2>
+	<DataSection2 section={sect["section"][0]} parag={sect["parag"]} {place} {options}></DataSection2>
 	{#if sect["round"]==0}
 		<section class="wrapper">
-			<div style="margin-top: 50px; margin-bottom: 50px; height: 150px;">
-				<Custom></Custom>
+			<div style="margin-top: 50px; margin-bottom: 50px; height: auto;">
+				<Custom location={place.name}></Custom>
 			</div>
 		</section>
 	{/if}
